@@ -3,5 +3,4 @@ __pycache__/
 .pytest_cache/
 eval_results/
 *.log
-*.png
 .DS_Store
