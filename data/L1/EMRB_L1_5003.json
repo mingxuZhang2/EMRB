@@ -1,0 +1,299 @@
+{
+  "sample_id": "EMRB_L1_5003",
+  "level": "L1",
+  "archetype": "A_bpsk_fm_chirp",
+  "archetype_desc": "BPSK + FM + Chirp",
+  "total_points": 100,
+  "num_questions": 5,
+  "question": "You are an electromagnetic signal analysis expert. Below is I/Q signal data collected from an electromagnetic environment.\n\nSignal file: EMRB_L1_5003.npy\nSampling rate: 20 MHz\nNumber of samples: 32768\nData format: complex64 (numpy)\nRecording duration: 1.6384 ms\n\nThis frequency band contains 3 non-overlapping independent signal sources (types include Digital Modulation/Analog FM/Swept Frequency), distributed as follows based on a preliminary scan:\n  - Approx. +3.9 MHz: Digital Modulation signal\n  - Approx. -5.7 MHz: Analog FM signal\n  - Approx. -7.7~-5.3 MHz: Swept Frequency signal (linear frequency modulation)\n\nPlease analyze these signals and answer the following questions (20 pts each, 100 pts total):\n\nQ1. Observe the spectrum of this frequency band and answer the following questions:\n    (a) How many distinct independent signals are present in this band? (4 pts)\n    (b) Estimate the center frequency (MHz) of each signal, listed from lowest to highest. (8 pts)\n    (c) Which signal has the strongest power? Which has the weakest? (Identify by center frequency) (4 pts)\n    (d) What is the power difference in dB between the strongest and weakest signals? (4 pts)\n\nQ2. Power measurement and dB conversion:\n    (a) Estimate the power (dBm) of each signal. (6 pts)\n    (b) Convert the power of each signal from dBm to mW.\n        Hint: P(mW) = 10^(P(dBm)/10) (4 pts)\n    (c) Calculate the total power of all signals (dBm).\n        Hint: P_total = 10·log₁₀(ΣPᵢ(mW)) (4 pts)\n    (d) Given a noise floor of -54.0 dBm/20MHz,\n        calculate the SNR (dB) of each signal within its respective bandwidth.\n        Hint: N_sig = N₀(dBm/Hz) + 10·log₁₀(BW_Hz) (6 pts)\n\nQ3. Sampling parameters and frequency resolution:\n    (a) Given sampling rate fs = 20 MHz and number of samples N = 32768,\n        calculate the recording duration T = N/fs (ms). (4 pts)\n    (b) Calculate the sampling interval Ts = 1/fs (ns). (4 pts)\n    (c) Calculate the FFT frequency resolution Δf = fs/N (Hz). (4 pts)\n    (d) To halve the frequency resolution Δf, how many samples are needed?\n        Should the sampling rate fs or the number of samples N be changed? Explain your reasoning. (8 pts)\n\nQ4. Noise floor estimation:\n    (a) Observe the signal-free regions of the spectrum and estimate the noise power spectral density (dBm/Hz).\n        Hint: Noise floor (dBm/20MHz) = -54.0 dBm,\n        N₀(dBm/Hz) = Noise floor (dBm) - 10·log₁₀(fs) (6 pts)\n    (b) Calculate the noise power within a 1 MHz bandwidth (dBm).\n        Hint: P_noise = N₀(dBm/Hz) + 10·log₁₀(1×10⁶) (5 pts)\n    (c) Determine whether this is white noise (i.e., whether the PSD is approximately uniform across all frequencies). (5 pts)\n    (d) If all signals were removed, would the noise floor change? Why or why not? (4 pts)\n\nQ5. Signal feature classification:\n    (a) Classify each signal by bandwidth: Narrowband (<100kHz), Midband (100kHz-1MHz), Wideband (>1MHz). (5 pts)\n    (b) Estimate the approximate 3 dB bandwidth (kHz) of each signal. (6 pts)\n    (c) Which signals are constant-envelope signals?\n        Hint: FM and Chirp signals are constant-envelope; PSK modulation depends on implementation. (5 pts)\n    (d) Identify the type of each signal: CW / FM / AM / Digital Modulation / Chirp. (4 pts)\n\nPlease provide complete calculation procedures and numerical results for each question.",
+  "questions": [
+    {
+      "id": "Q1",
+      "question": "Observe the spectrum of this frequency band and answer the following questions:\n    (a) How many distinct independent signals are present in this band? (4 pts)\n    (b) Estimate the center frequency (MHz) of each signal, listed from lowest to highest. (8 pts)\n    (c) Which signal has the strongest power? Which has the weakest? (Identify by center frequency) (4 pts)\n    (d) What is the power difference in dB between the strongest and weakest signals? (4 pts)",
+      "ground_truth": {
+        "signal_count": 3,
+        "center_frequencies_MHz": [
+          -6.5,
+          -5.68,
+          3.88
+        ],
+        "strongest_signal_MHz": -6.5,
+        "strongest_power_dBm": -31.9,
+        "weakest_signal_MHz": 3.88,
+        "weakest_power_dBm": -34.8,
+        "strongest_accepted_MHz": [
+          -6.5
+        ],
+        "weakest_accepted_MHz": [
+          3.88
+        ],
+        "power_difference_dB": 2.9
+      },
+      "rubric": {
+        "points": 20,
+        "count": {
+          "pts": 4,
+          "note": "exact match"
+        },
+        "frequencies": {
+          "pts": 8,
+          "tol": "+-0.5MHz per signal"
+        },
+        "strongest_weakest": {
+          "pts": 4,
+          "note": "identify correct signals"
+        },
+        "power_diff": {
+          "pts": 4,
+          "tol": "+-2dB"
+        },
+        "scoring": "l1-deterministic-v6"
+      }
+    },
+    {
+      "id": "Q2",
+      "question": "Power measurement and dB conversion:\n    (a) Estimate the power (dBm) of each signal. (6 pts)\n    (b) Convert the power of each signal from dBm to mW.\n        Hint: P(mW) = 10^(P(dBm)/10) (4 pts)\n    (c) Calculate the total power of all signals (dBm).\n        Hint: P_total = 10·log₁₀(ΣPᵢ(mW)) (4 pts)\n    (d) Given a noise floor of -54.0 dBm/20MHz,\n        calculate the SNR (dB) of each signal within its respective bandwidth.\n        Hint: N_sig = N₀(dBm/Hz) + 10·log₁₀(BW_Hz) (6 pts)",
+      "ground_truth": {
+        "powers_dBm": [
+          -34.8,
+          -34.3,
+          -31.9
+        ],
+        "powers_mW": [
+          0.0003,
+          0.0004,
+          0.0006
+        ],
+        "total_power_mW": 0.0013,
+        "total_power_dBm": -28.9,
+        "noise_psd_dBm_Hz": -127.0,
+        "SNR_per_signal_dB": [
+          35.1,
+          35.1,
+          31.5
+        ]
+      },
+      "rubric": {
+        "points": 20,
+        "power_est": {
+          "pts": 6,
+          "tol": "+-3dB per signal"
+        },
+        "dbm_to_mw": {
+          "pts": 4,
+          "note": "formula application"
+        },
+        "total_power": {
+          "pts": 4,
+          "tol": "+-1dB"
+        },
+        "snr": {
+          "pts": 6,
+          "tol": "+-3dB per signal"
+        },
+        "scoring": "l1-deterministic-v6"
+      }
+    },
+    {
+      "id": "Q3",
+      "question": "Sampling parameters and frequency resolution:\n    (a) Given sampling rate fs = 20 MHz and number of samples N = 32768,\n        calculate the recording duration T = N/fs (ms). (4 pts)\n    (b) Calculate the sampling interval Ts = 1/fs (ns). (4 pts)\n    (c) Calculate the FFT frequency resolution Δf = fs/N (Hz). (4 pts)\n    (d) To halve the frequency resolution Δf, how many samples are needed?\n        Should the sampling rate fs or the number of samples N be changed? Explain your reasoning. (8 pts)",
+      "ground_truth": {
+        "duration_ms": 1.6384,
+        "Ts_ns": 50.0,
+        "delta_f_Hz": 610.35,
+        "N_for_half_delta_f": 65536,
+        "change_parameter": "N (increase the number of samples)",
+        "explanation": "Increasing N halves Δf=fs/N; changing fs would also alter the observable frequency range"
+      },
+      "rubric": {
+        "points": 20,
+        "duration": {
+          "pts": 4,
+          "note": "exact calculation"
+        },
+        "Ts": {
+          "pts": 4,
+          "note": "exact calculation"
+        },
+        "delta_f": {
+          "pts": 4,
+          "note": "exact calculation"
+        },
+        "halving": {
+          "pts": 8,
+          "note": "4pts for N=2N, 4pts for reasoning"
+        },
+        "scoring": "l1-deterministic-v6"
+      }
+    },
+    {
+      "id": "Q4",
+      "question": "Noise floor estimation:\n    (a) Observe the signal-free regions of the spectrum and estimate the noise power spectral density (dBm/Hz).\n        Hint: Noise floor (dBm/20MHz) = -54.0 dBm,\n        N₀(dBm/Hz) = Noise floor (dBm) - 10·log₁₀(fs) (6 pts)\n    (b) Calculate the noise power within a 1 MHz bandwidth (dBm).\n        Hint: P_noise = N₀(dBm/Hz) + 10·log₁₀(1×10⁶) (5 pts)\n    (c) Determine whether this is white noise (i.e., whether the PSD is approximately uniform across all frequencies). (5 pts)\n    (d) If all signals were removed, would the noise floor change? Why or why not? (4 pts)",
+      "ground_truth": {
+        "noise_psd_dBm_Hz": -127.0,
+        "noise_1MHz_dBm": -67.0,
+        "is_white_noise": true,
+        "white_noise_reason": "The PSD of AWGN noise is uniformly distributed across all frequencies",
+        "noise_changes_without_signals": false,
+        "reason": "The noise is additive and independent of the signals; removing signals does not affect the noise floor"
+      },
+      "rubric": {
+        "points": 20,
+        "psd": {
+          "pts": 6,
+          "tol": "+-2dB"
+        },
+        "noise_1mhz": {
+          "pts": 5,
+          "tol": "+-2dB"
+        },
+        "white_noise": {
+          "pts": 5,
+          "note": "correct judgment + reasoning"
+        },
+        "removal": {
+          "pts": 4,
+          "note": "correct answer + reasoning"
+        },
+        "scoring": "l1-deterministic-v6"
+      }
+    },
+    {
+      "id": "Q5",
+      "question": "Signal feature classification:\n    (a) Classify each signal by bandwidth: Narrowband (<100kHz), Midband (100kHz-1MHz), Wideband (>1MHz). (5 pts)\n    (b) Estimate the approximate 3 dB bandwidth (kHz) of each signal. (6 pts)\n    (c) Which signals are constant-envelope signals?\n        Hint: FM and Chirp signals are constant-envelope; PSK modulation depends on implementation. (5 pts)\n    (d) Identify the type of each signal: CW / FM / AM / Digital Modulation / Chirp. (4 pts)",
+      "ground_truth": {
+        "bandwidth_classifications": [
+          {
+            "signal": "BPSK",
+            "center_MHz": 3.8800685862729725,
+            "bandwidth_kHz": 520.0,
+            "category": "Midband (100kHz-1MHz)"
+          },
+          {
+            "signal": "FM",
+            "center_MHz": -5.684142744976515,
+            "bandwidth_kHz": 577.0,
+            "category": "Midband (100kHz-1MHz)"
+          },
+          {
+            "signal": "Chirp (LFM)",
+            "center_MHz": -6.503410947568289,
+            "bandwidth_kHz": 2310.2,
+            "category": "Wideband (>1MHz)"
+          }
+        ],
+        "bandwidths_kHz": [
+          520.0,
+          577.0,
+          2310.2
+        ],
+        "bandwidths_3dB_kHz": [
+          317.4,
+          522.5,
+          2119.1
+        ],
+        "bandwidth_categories_accepted": [
+          [
+            "Midband (100kHz-1MHz)"
+          ],
+          [
+            "Midband (100kHz-1MHz)"
+          ],
+          [
+            "Wideband (>1MHz)"
+          ]
+        ],
+        "constant_envelope": [
+          {
+            "signal": "BPSK",
+            "constant_envelope": false
+          },
+          {
+            "signal": "FM",
+            "constant_envelope": true
+          },
+          {
+            "signal": "Chirp (LFM)",
+            "constant_envelope": true
+          }
+        ],
+        "signal_types": [
+          {
+            "signal": "BPSK",
+            "label": "Digital Modulation"
+          },
+          {
+            "signal": "FM",
+            "label": "Frequency Modulation (FM)"
+          },
+          {
+            "signal": "Chirp (LFM)",
+            "label": "Swept Frequency (Chirp)"
+          }
+        ]
+      },
+      "rubric": {
+        "points": 20,
+        "bw_category": {
+          "pts": 5,
+          "note": "correct category per signal"
+        },
+        "bw_estimate": {
+          "pts": 6,
+          "tol": "+-30% per signal"
+        },
+        "const_envelope": {
+          "pts": 5,
+          "note": "correct identification"
+        },
+        "type_id": {
+          "pts": 4,
+          "note": "correct type per signal"
+        },
+        "scoring": "l1-deterministic-v6"
+      }
+    }
+  ],
+  "generation_params": {
+    "fs": 20000000.0,
+    "N": 32768,
+    "duration_ms": 1.6384,
+    "signals": [
+      {
+        "type": "BPSK",
+        "center_frequency_MHz": 3.8800685862729725,
+        "symbol_rate_kHz": 400.0,
+        "rolloff": 0.3,
+        "M": 2,
+        "bits_per_symbol": 1,
+        "power_dBm": -34.8,
+        "bandwidth_MHz": 0.52
+      },
+      {
+        "type": "FM",
+        "center_frequency_MHz": -5.684142744976515,
+        "frequency_deviation_kHz": 272.42805988472037,
+        "modulating_frequency_kHz": 16.314265610038607,
+        "max_modulating_freq_kHz": 16.3,
+        "modulation_index": 16.7,
+        "carson_bandwidth_kHz": 577.5,
+        "power_dBm": -34.3,
+        "bandwidth_MHz": 0.577
+      },
+      {
+        "type": "Chirp (LFM)",
+        "center_frequency_MHz": -6.503410947568289,
+        "sweep_start_MHz": -7.658497283785121,
+        "sweep_end_MHz": -5.348324611351456,
+        "bandwidth_MHz": 2.310172672433665,
+        "chirp_rate_MHz_per_ms": 1.41,
+        "time_bandwidth_product": 3785.0,
+        "processing_gain_dB": 35.8,
+        "range_resolution_m": 64.93,
+        "power_dBm": -31.9
+      }
+    ],
+    "noise_floor_dBm": -54.0,
+    "seed": 5003
+  }
+}

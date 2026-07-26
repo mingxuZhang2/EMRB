@@ -1,0 +1,267 @@
+{
+  "sample_id": "EMRB_L4_1000",
+  "level": "L4",
+  "archetype": "A_dense_digital",
+  "archetype_desc": "Dense digital band with adjacent PSK/QAM signals",
+  "total_points": 100,
+  "question": "You are an electromagnetic signal analysis expert. Below is I/Q signal data collected from a complex electromagnetic environment.\n\nSignal file: EMRB_L4_1000.npy\nSample rate: 20 MHz\nNumber of samples: 32768\nData format: complex64 (numpy)\nRecording duration: 1.6384 ms\n\nMultiple independent signal sources exist within this frequency band (spectral overlap and burst signals may be present).\nPlease first analyze the signal environment on your own, then answer the following questions:\n\nQ1. There are two digitally modulated signals in the -0.3~+2.7 MHz region. Please estimate their symbol rates (ksym/s) and modulation orders respectively, and explain how you distinguished between the two signals.\n\nQ2. There is a linear frequency modulated (Chirp) signal in the +5~+8 MHz range. Please calculate: (a) time-bandwidth product (TBP), (b) processing gain after matched filtering (dB), (c) if this chirp is used for radar ranging, what is the corresponding range resolution in meters?\n\nQ3. Analyze the spectral environment comprehensively: if deploying a new 64QAM communication link in the -1.46~+0.43 MHz spectral gap (rolloff=0.2), (a) what is the maximum available contiguous bandwidth in MHz? (b) what is the maximum achievable data rate in kbps? (c) under the current noise environment (noise floor approx. -45 dBm/20MHz), what minimum received signal power in the link bandwidth is required to meet the minimum SNR for 64QAM (23 dB)?\n\nQ4. Identify the most spectrally critical pair of signals in the capture. If any occupied-bandwidth intervals overlap, select the pair with the largest overlap; otherwise select the pair with the smallest guard gap. (a) Report both signal types, center frequencies, occupied-frequency intervals, and their center-frequency separation. (b) Determine whether the intervals overlap. Report the overlap bandwidth if they overlap, or the guard-gap bandwidth if they are separated. (c) Treat the weaker signal as the target and calculate its target-to-other received-power ratio in dB. (d) Determine whether frequency-selective filtering alone can preserve the target's full occupied bandwidth while rejecting the other signal. If the pair is separated, report the available transition bandwidth. If it overlaps, report the target bandwidth outside the overlap and the percentage of the target bandwidth that is overlapped. In the final answer, return this question as one JSON object with fields pair, center_separation_MHz, spectral_relation, overlap_MHz, guard_gap_MHz, target_type, target_to_other_power_ratio_dB, full_band_isolation_possible, available_transition_bandwidth_MHz, nonoverlapped_target_bandwidth_MHz, and overlapped_target_fraction_pct. Each entry in pair must contain type, center_MHz, and occupied_interval_MHz.\n\nQ5. For the 8PSK signal at +1.7 MHz, given a noise floor of -45 dBm/20MHz: (a) estimate the SNR (dB) of this signal within its occupied bandwidth. (b) According to the Shannon formula, what is the theoretical channel capacity upper bound in Mbps? (c) How far is the current modulation scheme's spectral efficiency (3 bits/symbol) from the Shannon limit?\n\nPlease provide a complete reasoning process and numerical results for each question.\n\nAnswer format version: emrb-l4-repaired-v1. In the final ===ANSWERS=== block, use one line per top-level question in the form Q1: value through Q5: value. For a question that requests a JSON object, place one valid single-line JSON object directly after its Q label.",
+  "questions": [
+    {
+      "id": "Q1",
+      "question_type": "QT01",
+      "question": "There are two digitally modulated signals in the -0.3~+2.7 MHz region. Please estimate their symbol rates (ksym/s) and modulation orders respectively, and explain how you distinguished between the two signals.",
+      "ground_truth": {
+        "signal_1": {
+          "type": "QPSK",
+          "symbol_rate_ksps": 350.0,
+          "M": 4,
+          "center_frequency_MHz": 0.6725104146866085
+        },
+        "signal_2": {
+          "type": "8PSK",
+          "symbol_rate_ksps": 150.0,
+          "M": 8,
+          "center_frequency_MHz": 1.69374811597258
+        }
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "symbol_rate_1": {
+          "pts": 4,
+          "tolerance": "±15%",
+          "answer": 350.0
+        },
+        "mod_order_1": {
+          "pts": 4,
+          "scoring": {
+            "QPSK": 4,
+            "PSK": 2,
+            "QAM": 2,
+            "digital": 1
+          },
+          "answer": "QPSK"
+        },
+        "symbol_rate_2": {
+          "pts": 4,
+          "tolerance": "±15%",
+          "answer": 150.0
+        },
+        "mod_order_2": {
+          "pts": 4,
+          "scoring": {
+            "8PSK": 4,
+            "PSK": 2,
+            "QAM": 2,
+            "digital": 1
+          },
+          "answer": "8PSK"
+        },
+        "reasoning": {
+          "pts": 4,
+          "note": "Whether the analysis method is reasonable (spectral nulls, cyclostationary, etc.)"
+        }
+      }
+    },
+    {
+      "id": "Q2",
+      "question_type": "QT03",
+      "question": "There is a linear frequency modulated (Chirp) signal in the +5~+8 MHz range. Please calculate: (a) time-bandwidth product (TBP), (b) processing gain after matched filtering (dB), (c) if this chirp is used for radar ranging, what is the corresponding range resolution in meters?",
+      "ground_truth": {
+        "TBP": 5550.8,
+        "processing_gain_dB": 37.4,
+        "range_resolution_m": 44.27
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "TBP": {
+          "pts": 7,
+          "tolerance": "±10%"
+        },
+        "processing_gain": {
+          "pts": 7,
+          "tolerance": "±1dB"
+        },
+        "range_resolution": {
+          "pts": 6,
+          "tolerance": "±10%"
+        }
+      }
+    },
+    {
+      "id": "Q3",
+      "question_type": "QT05",
+      "question": "Analyze the spectral environment comprehensively: if deploying a new 64QAM communication link in the -1.46~+0.43 MHz spectral gap (rolloff=0.2), (a) what is the maximum available contiguous bandwidth in MHz? (b) what is the maximum achievable data rate in kbps? (c) under the current noise environment (noise floor approx. -45 dBm/20MHz), what minimum received signal power in the link bandwidth is required to meet the minimum SNR for 64QAM (23 dB)?",
+      "ground_truth": {
+        "available_gap_MHz": 1.891,
+        "symbol_rate_ksps": 1575.4,
+        "data_rate_kbps": 9452.5,
+        "required_power_dBm": -32.2
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "bandwidth": {
+          "pts": 6,
+          "tolerance": "±0.05MHz"
+        },
+        "data_rate": {
+          "pts": 7,
+          "tolerance": "±20%"
+        },
+        "power": {
+          "pts": 7,
+          "tolerance": "±3dB"
+        }
+      }
+    },
+    {
+      "id": "Q4",
+      "question_type": "QT07",
+      "question": "Identify the most spectrally critical pair of signals in the capture. If any occupied-bandwidth intervals overlap, select the pair with the largest overlap; otherwise select the pair with the smallest guard gap. (a) Report both signal types, center frequencies, occupied-frequency intervals, and their center-frequency separation. (b) Determine whether the intervals overlap. Report the overlap bandwidth if they overlap, or the guard-gap bandwidth if they are separated. (c) Treat the weaker signal as the target and calculate its target-to-other received-power ratio in dB. (d) Determine whether frequency-selective filtering alone can preserve the target's full occupied bandwidth while rejecting the other signal. If the pair is separated, report the available transition bandwidth. If it overlaps, report the target bandwidth outside the overlap and the percentage of the target bandwidth that is overlapped. In the final answer, return this question as one JSON object with fields pair, center_separation_MHz, spectral_relation, overlap_MHz, guard_gap_MHz, target_type, target_to_other_power_ratio_dB, full_band_isolation_possible, available_transition_bandwidth_MHz, nonoverlapped_target_bandwidth_MHz, and overlapped_target_fraction_pct. Each entry in pair must contain type, center_MHz, and occupied_interval_MHz.",
+      "ground_truth": {
+        "pair": [
+          {
+            "signal_id": 1,
+            "type": "QPSK",
+            "center_frequency_MHz": 0.673,
+            "occupied_interval_MHz": [
+              0.428,
+              0.918
+            ]
+          },
+          {
+            "signal_id": 2,
+            "type": "8PSK",
+            "center_frequency_MHz": 1.694,
+            "occupied_interval_MHz": [
+              1.604,
+              1.784
+            ]
+          }
+        ],
+        "center_separation_MHz": 1.021,
+        "spectral_relation": "separated",
+        "overlap_MHz": 0.0,
+        "guard_gap_MHz": 0.686,
+        "target_signal_id": 1,
+        "target_type": "QPSK",
+        "other_signal_id": 2,
+        "target_to_other_power_ratio_dB": -1.7,
+        "full_band_isolation_possible": true,
+        "available_transition_bandwidth_MHz": 0.686,
+        "nonoverlapped_target_bandwidth_MHz": 0.49,
+        "overlapped_target_fraction_pct": 0.0
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-deterministic-v1",
+        "pair_and_separation": {
+          "pts": 5,
+          "tolerance": "±0.1MHz"
+        },
+        "spectral_relation": {
+          "pts": 5,
+          "tolerance": "±0.05MHz"
+        },
+        "target_power_ratio": {
+          "pts": 4,
+          "tolerance": "±2dB"
+        },
+        "isolation_geometry": {
+          "pts": 6,
+          "tolerance": "±10%"
+        }
+      }
+    },
+    {
+      "id": "Q5",
+      "question_type": "QT10",
+      "question": "For the 8PSK signal at +1.7 MHz, given a noise floor of -45 dBm/20MHz: (a) estimate the SNR (dB) of this signal within its occupied bandwidth. (b) According to the Shannon formula, what is the theoretical channel capacity upper bound in Mbps? (c) How far is the current modulation scheme's spectral efficiency (3 bits/symbol) from the Shannon limit?",
+      "ground_truth": {
+        "snr_dB": 32.7,
+        "shannon_capacity_Mbps": 1.95,
+        "spectral_efficiency_gap": 8.35,
+        "accepted_conventions": [
+          {
+            "snr_dB": 32.7,
+            "shannon_capacity_Mbps": 1.95,
+            "spectral_efficiency_gap": [
+              7.85,
+              8.35
+            ]
+          }
+        ]
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "snr": {
+          "pts": 6,
+          "tolerance": "±3dB"
+        },
+        "capacity": {
+          "pts": 8,
+          "tolerance": "±20%"
+        },
+        "gap_analysis": {
+          "pts": 6,
+          "note": "Correctly computes the gap between current efficiency and the Shannon limit"
+        }
+      }
+    }
+  ],
+  "generation_params": {
+    "fs": 20000000.0,
+    "N": 32768,
+    "duration_ms": 1.6384,
+    "signals": [
+      {
+        "type": "QPSK",
+        "center_frequency_MHz": 0.6725104146866085,
+        "symbol_rate_kHz": 350.0,
+        "rolloff": 0.4,
+        "M": 4,
+        "bits_per_symbol": 2,
+        "power_dBm": -34.5,
+        "bandwidth_MHz": 0.49
+      },
+      {
+        "type": "8PSK",
+        "center_frequency_MHz": 1.69374811597258,
+        "symbol_rate_kHz": 150.0,
+        "rolloff": 0.2,
+        "M": 8,
+        "bits_per_symbol": 3,
+        "power_dBm": -32.8,
+        "bandwidth_MHz": 0.18
+      },
+      {
+        "type": "16QAM",
+        "center_frequency_MHz": -1.742993716716174,
+        "symbol_rate_kHz": 400.0,
+        "rolloff": 0.4,
+        "M": 16,
+        "bits_per_symbol": 4,
+        "power_dBm": -34.3,
+        "bandwidth_MHz": 0.56
+      },
+      {
+        "type": "Chirp (LFM)",
+        "center_frequency_MHz": 6.5,
+        "sweep_start_MHz": 4.806025786045589,
+        "sweep_end_MHz": 8.193974213954412,
+        "bandwidth_MHz": 3.387948427908823,
+        "chirp_rate_MHz_per_ms": 2.07,
+        "time_bandwidth_product": 5550.8,
+        "processing_gain_dB": 37.4,
+        "range_resolution_m": 44.27,
+        "power_dBm": -33.7
+      }
+    ],
+    "noise_floor_dBm": "-45",
+    "seed": 1000
+  },
+  "answer_schema_version": "emrb-l4-repaired-v1"
+}

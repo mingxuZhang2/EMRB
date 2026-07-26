@@ -1,0 +1,237 @@
+{
+  "sample_id": "EMRB_L4_1009",
+  "level": "L4",
+  "archetype": "B_mixed_analog_digital",
+  "archetype_desc": "Mixed analog + digital coexistence",
+  "total_points": 100,
+  "question": "You are an electromagnetic signal analysis expert. Below is I/Q signal data collected from a complex electromagnetic environment.\n\nSignal file: EMRB_L4_1009.npy\nSample rate: 20 MHz\nNumber of samples: 32768\nData format: complex64 (numpy)\nRecording duration: 1.6384 ms\n\nMultiple independent signal sources exist within this frequency band (spectral overlap and burst signals may be present).\nPlease first analyze the signal environment on your own, then answer the following questions:\n\nQ1. There is a digitally modulated signal near +1.3 MHz. Please estimate its symbol rate (ksym/s) and modulation order.\n\nQ2. For the FM signal near -3.3 MHz, please estimate: (a) frequency deviation (kHz), (b) maximum modulating frequency (kHz), (c) modulation index beta, (d) verify whether the observed bandwidth is consistent with Carson's rule.\n\nQ3. There is a burst signal near -6.8 MHz. Please answer: (a) What is the modulation type of this signal? (b) What is its duty cycle over the entire recording? (c) If detecting this signal using a full-band FFT, how much will the FFT output SNR decrease (in dB) compared to the SNR during the signal's active period? Please derive the result.\n\nQ4. Analyze the complete -10 to +10 MHz observed band and identify the largest contiguous interval not occupied by any generated signal. Reserve a 0.05 MHz guard band at each edge of that interval. (a) Report the raw gap boundaries and bandwidth, followed by the usable boundaries and bandwidth after applying the guards. (b) A new 16QAM link with rolloff=0.2 uses the entire usable interval. Calculate its maximum symbol rate and raw data rate. (c) The measured noise floor is -45 dBm across 20 MHz. Calculate the minimum received signal power required in the new link bandwidth to meet an SNR of 17 dB. In the final answer, return this question as one JSON object with fields raw_gap_bounds_MHz, raw_gap_MHz, usable_gap_bounds_MHz, usable_gap_MHz, symbol_rate_ksps, data_rate_kbps, noise_in_link_band_dBm, and minimum_received_power_dBm.\n\nQ5. There is an AM signal near +6.5 MHz. Please estimate: (a) modulation depth, (b) modulating signal frequency (kHz), (c) transmission efficiency eta (ratio of signal power to total power), (d) occupied bandwidth (kHz).\n\nPlease provide a complete reasoning process and numerical results for each question.\n\nAnswer format version: emrb-l4-repaired-v1. In the final ===ANSWERS=== block, use one line per top-level question in the form Q1: value through Q5: value. For a question that requests a JSON object, place one valid single-line JSON object directly after its Q label.",
+  "questions": [
+    {
+      "id": "Q1",
+      "question_type": "QT01",
+      "question": "There is a digitally modulated signal near +1.3 MHz. Please estimate its symbol rate (ksym/s) and modulation order.",
+      "ground_truth": {
+        "symbol_rate_ksps": 450.0,
+        "type": "QPSK",
+        "M": 4,
+        "center_frequency_MHz": 1.329149250486815
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "symbol_rate": {
+          "pts": 10,
+          "tolerance": "±15%",
+          "answer": 450.0
+        },
+        "mod_order": {
+          "pts": 10,
+          "answer": "QPSK"
+        }
+      }
+    },
+    {
+      "id": "Q2",
+      "question_type": "QT02",
+      "question": "For the FM signal near -3.3 MHz, please estimate: (a) frequency deviation (kHz), (b) maximum modulating frequency (kHz), (c) modulation index beta, (d) verify whether the observed bandwidth is consistent with Carson's rule.",
+      "ground_truth": {
+        "frequency_deviation_kHz": 150.50930902250838,
+        "max_modulating_freq_kHz": 70.1,
+        "modulation_index": 2.15,
+        "modulation_index_accepted": [
+          2.15,
+          9.92
+        ],
+        "carson_bandwidth_kHz": 441.1,
+        "carson_bandwidth_accepted_kHz": [
+          441.1,
+          441.2
+        ]
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "deviation": {
+          "pts": 6,
+          "tolerance": "±20%"
+        },
+        "mod_freq": {
+          "pts": 5,
+          "tolerance": "±30%"
+        },
+        "mod_index": {
+          "pts": 4,
+          "tolerance": "±30%"
+        },
+        "carson_value": {
+          "pts": 3,
+          "tolerance": "±20%"
+        },
+        "carson_verdict": {
+          "pts": 2,
+          "note": "observed bandwidth is consistent with Carson by construction"
+        }
+      }
+    },
+    {
+      "id": "Q3",
+      "question_type": "QT04",
+      "question": "There is a burst signal near -6.8 MHz. Please answer: (a) What is the modulation type of this signal? (b) What is its duty cycle over the entire recording? (c) If detecting this signal using a full-band FFT, how much will the FFT output SNR decrease (in dB) compared to the SNR during the signal's active period? Please derive the result.",
+      "ground_truth": {
+        "modulation": "BPSK",
+        "duty_cycle": 0.23,
+        "snr_loss_dB": -6.5
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "modulation": {
+          "pts": 5,
+          "scoring": {
+            "BPSK": 5,
+            "PSK": 3,
+            "digital": 1
+          }
+        },
+        "duty_cycle": {
+          "pts": 5,
+          "tolerance": "±0.05"
+        },
+        "snr_loss_value": {
+          "pts": 6,
+          "tolerance": "±1dB",
+          "note": "SNR_loss=10log10(duty_cycle); sign-agnostic"
+        },
+        "snr_loss_derivation": {
+          "pts": 4,
+          "note": "derivation must invoke 10log10 of the duty cycle"
+        }
+      }
+    },
+    {
+      "id": "Q4",
+      "question_type": "QT05",
+      "question": "Analyze the complete -10 to +10 MHz observed band and identify the largest contiguous interval not occupied by any generated signal. Reserve a 0.05 MHz guard band at each edge of that interval. (a) Report the raw gap boundaries and bandwidth, followed by the usable boundaries and bandwidth after applying the guards. (b) A new 16QAM link with rolloff=0.2 uses the entire usable interval. Calculate its maximum symbol rate and raw data rate. (c) The measured noise floor is -45 dBm across 20 MHz. Calculate the minimum received signal power required in the new link bandwidth to meet an SNR of 17 dB. In the final answer, return this question as one JSON object with fields raw_gap_bounds_MHz, raw_gap_MHz, usable_gap_bounds_MHz, usable_gap_MHz, symbol_rate_ksps, data_rate_kbps, noise_in_link_band_dBm, and minimum_received_power_dBm.",
+      "ground_truth": {
+        "raw_gap_bounds_MHz": [
+          1.622,
+          6.502
+        ],
+        "raw_gap_MHz": 4.881,
+        "guard_each_side_MHz": 0.05,
+        "usable_gap_bounds_MHz": [
+          1.672,
+          6.452
+        ],
+        "available_gap_MHz": 4.781,
+        "modulation": "16QAM",
+        "rolloff": 0.2,
+        "symbol_rate_ksps": 3983.8,
+        "data_rate_kbps": 15935.2,
+        "noise_in_link_band_dBm": -51.2,
+        "minimum_received_power_dBm": -34.2
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-deterministic-v1",
+        "gap_identification": {
+          "pts": 8,
+          "tolerance": "±0.05MHz per boundary"
+        },
+        "link_rate": {
+          "pts": 6,
+          "tolerance": "±15%"
+        },
+        "received_power": {
+          "pts": 6,
+          "tolerance": "±2dB"
+        }
+      }
+    },
+    {
+      "id": "Q5",
+      "question_type": "QT08",
+      "question": "There is an AM signal near +6.5 MHz. Please estimate: (a) modulation depth, (b) modulating signal frequency (kHz), (c) transmission efficiency eta (ratio of signal power to total power), (d) occupied bandwidth (kHz).",
+      "ground_truth": {
+        "modulation_depth": 0.67,
+        "modulating_freq_kHz": 21.835681245035907,
+        "efficiency": 0.183,
+        "bandwidth_kHz": 44.0
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "mod_depth": {
+          "pts": 5,
+          "tolerance": "±15%"
+        },
+        "mod_freq": {
+          "pts": 5,
+          "tolerance": "±20%"
+        },
+        "efficiency": {
+          "pts": 5,
+          "tolerance": "±30%",
+          "note": "η=m²/(2+m²)"
+        },
+        "bandwidth": {
+          "pts": 5,
+          "tolerance": "±20%"
+        }
+      }
+    }
+  ],
+  "generation_params": {
+    "fs": 20000000.0,
+    "N": 32768,
+    "duration_ms": 1.6384,
+    "signals": [
+      {
+        "type": "QPSK",
+        "center_frequency_MHz": 1.329149250486815,
+        "symbol_rate_kHz": 450.0,
+        "rolloff": 0.3,
+        "M": 4,
+        "bits_per_symbol": 2,
+        "power_dBm": -34.1,
+        "bandwidth_MHz": 0.585
+      },
+      {
+        "type": "FM",
+        "center_frequency_MHz": -3.335625645371949,
+        "frequency_deviation_kHz": 150.50930902250838,
+        "modulating_frequency_kHz": 15.17363388541555,
+        "max_modulating_freq_kHz": 70.1,
+        "modulation_index": 2.15,
+        "carson_bandwidth_kHz": 441.1,
+        "power_dBm": -35.0,
+        "bandwidth_MHz": 0.441
+      },
+      {
+        "type": "AM-DSB",
+        "center_frequency_MHz": 6.524215951044096,
+        "modulation_depth": 0.67,
+        "modulating_frequency_kHz": 21.835681245035907,
+        "efficiency": 0.183,
+        "power_dBm": -38.0,
+        "bandwidth_MHz": 0.044
+      },
+      {
+        "type": "BPSK (burst)",
+        "center_frequency_MHz": -6.843144018972285,
+        "symbol_rate_kHz": 500.0,
+        "rolloff": 0.25,
+        "M": 2,
+        "bits_per_symbol": 1,
+        "power_dBm": -34.0,
+        "bandwidth_MHz": 0.625,
+        "active_window": "17%-40%",
+        "duty_cycle": 0.23,
+        "snr_loss_dB": -6.5
+      }
+    ],
+    "noise_floor_dBm": "-45",
+    "seed": 1009
+  },
+  "answer_schema_version": "emrb-l4-repaired-v1"
+}

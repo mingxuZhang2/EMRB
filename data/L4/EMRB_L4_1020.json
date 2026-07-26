@@ -1,0 +1,218 @@
+{
+  "sample_id": "EMRB_L4_1020",
+  "level": "L4",
+  "archetype": "E_fsk_scenario",
+  "archetype_desc": "FSK + mixed signals",
+  "total_points": 100,
+  "question": "You are an electromagnetic signal analysis expert. Below is I/Q signal data collected from a complex electromagnetic environment.\n\nSignal file: EMRB_L4_1020.npy\nSample rate: 20 MHz\nNumber of samples: 32768\nData format: complex64 (numpy)\nRecording duration: 1.6384 ms\n\nMultiple independent signal sources exist within this frequency band (spectral overlap and burst signals may be present).\nPlease first analyze the signal environment on your own, then answer the following questions:\n\nQ1. There is a digitally modulated signal near +3.5 MHz. Please estimate its symbol rate (ksym/s) and modulation order.\n\nQ2. For the FM signal near -7.9 MHz, please estimate: (a) frequency deviation (kHz), (b) maximum modulating frequency (kHz), (c) modulation index beta, (d) verify whether the observed bandwidth is consistent with Carson's rule.\n\nQ3. There is a linear frequency modulated (Chirp) signal in the +5~+9 MHz range. Please calculate: (a) time-bandwidth product (TBP), (b) processing gain after matched filtering (dB), (c) if this chirp is used for radar ranging, what is the corresponding range resolution in meters?\n\nQ4. Analyze the spectral environment comprehensively: if deploying a new 16QAM communication link in the -3.10~+3.35 MHz spectral gap (rolloff=0.2), (a) what is the maximum available contiguous bandwidth in MHz? (b) what is the maximum achievable data rate in kbps? (c) under the current noise environment (noise floor approx. -52 dBm/20MHz), what minimum received signal power in the link bandwidth is required to meet the minimum SNR for 16QAM (17 dB)?\n\nQ5. For the QPSK signal at +3.5 MHz, given a noise floor of -52 dBm/20MHz: (a) estimate the SNR (dB) of this signal within its occupied bandwidth. (b) According to the Shannon formula, what is the theoretical channel capacity upper bound in Mbps? (c) How far is the current modulation scheme's spectral efficiency (2 bits/symbol) from the Shannon limit?\n\nPlease provide a complete reasoning process and numerical results for each question.",
+  "questions": [
+    {
+      "id": "Q1",
+      "question_type": "QT01",
+      "question": "There is a digitally modulated signal near +3.5 MHz. Please estimate its symbol rate (ksym/s) and modulation order.",
+      "ground_truth": {
+        "symbol_rate_ksps": 250.0,
+        "type": "QPSK",
+        "M": 4,
+        "center_frequency_MHz": 3.4997891114402218
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "symbol_rate": {
+          "pts": 10,
+          "tolerance": "±15%",
+          "answer": 250.0
+        },
+        "mod_order": {
+          "pts": 10,
+          "answer": "QPSK"
+        }
+      }
+    },
+    {
+      "id": "Q2",
+      "question_type": "QT02",
+      "question": "For the FM signal near -7.9 MHz, please estimate: (a) frequency deviation (kHz), (b) maximum modulating frequency (kHz), (c) modulation index beta, (d) verify whether the observed bandwidth is consistent with Carson's rule.",
+      "ground_truth": {
+        "frequency_deviation_kHz": 261.9716489256406,
+        "max_modulating_freq_kHz": 105.7,
+        "modulation_index": 2.48,
+        "modulation_index_accepted": [
+          2.48,
+          13.41
+        ],
+        "carson_bandwidth_kHz": 735.4,
+        "carson_bandwidth_accepted_kHz": [
+          735.3,
+          735.4
+        ]
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "deviation": {
+          "pts": 6,
+          "tolerance": "±20%"
+        },
+        "mod_freq": {
+          "pts": 5,
+          "tolerance": "±30%"
+        },
+        "mod_index": {
+          "pts": 4,
+          "tolerance": "±30%"
+        },
+        "carson_value": {
+          "pts": 3,
+          "tolerance": "±20%"
+        },
+        "carson_verdict": {
+          "pts": 2,
+          "note": "observed bandwidth is consistent with Carson by construction"
+        }
+      }
+    },
+    {
+      "id": "Q3",
+      "question_type": "QT03",
+      "question": "There is a linear frequency modulated (Chirp) signal in the +5~+9 MHz range. Please calculate: (a) time-bandwidth product (TBP), (b) processing gain after matched filtering (dB), (c) if this chirp is used for radar ranging, what is the corresponding range resolution in meters?",
+      "ground_truth": {
+        "TBP": 6486.1,
+        "processing_gain_dB": 38.1,
+        "range_resolution_m": 37.89
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "TBP": {
+          "pts": 7,
+          "tolerance": "±10%"
+        },
+        "processing_gain": {
+          "pts": 7,
+          "tolerance": "±1dB"
+        },
+        "range_resolution": {
+          "pts": 6,
+          "tolerance": "±10%"
+        }
+      }
+    },
+    {
+      "id": "Q4",
+      "question_type": "QT05",
+      "question": "Analyze the spectral environment comprehensively: if deploying a new 16QAM communication link in the -3.10~+3.35 MHz spectral gap (rolloff=0.2), (a) what is the maximum available contiguous bandwidth in MHz? (b) what is the maximum achievable data rate in kbps? (c) under the current noise environment (noise floor approx. -52 dBm/20MHz), what minimum received signal power in the link bandwidth is required to meet the minimum SNR for 16QAM (17 dB)?",
+      "ground_truth": {
+        "available_gap_MHz": 6.45,
+        "symbol_rate_ksps": 5374.7,
+        "data_rate_kbps": 21498.7,
+        "required_power_dBm": -39.9
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "bandwidth": {
+          "pts": 6,
+          "tolerance": "±0.05MHz"
+        },
+        "data_rate": {
+          "pts": 7,
+          "tolerance": "±20%"
+        },
+        "power": {
+          "pts": 7,
+          "tolerance": "±3dB"
+        }
+      }
+    },
+    {
+      "id": "Q5",
+      "question_type": "QT10",
+      "question": "For the QPSK signal at +3.5 MHz, given a noise floor of -52 dBm/20MHz: (a) estimate the SNR (dB) of this signal within its occupied bandwidth. (b) According to the Shannon formula, what is the theoretical channel capacity upper bound in Mbps? (c) How far is the current modulation scheme's spectral efficiency (2 bits/symbol) from the Shannon limit?",
+      "ground_truth": {
+        "snr_dB": 34.8,
+        "shannon_capacity_Mbps": 3.47,
+        "spectral_efficiency_gap": 9.91,
+        "accepted_conventions": [
+          {
+            "snr_dB": 34.8,
+            "shannon_capacity_Mbps": 3.47,
+            "spectral_efficiency_gap": [
+              9.57,
+              9.91
+            ]
+          }
+        ]
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "snr": {
+          "pts": 6,
+          "tolerance": "±3dB"
+        },
+        "capacity": {
+          "pts": 8,
+          "tolerance": "±20%"
+        },
+        "gap_analysis": {
+          "pts": 6,
+          "note": "Correctly computes the gap between current efficiency and the Shannon limit"
+        }
+      }
+    }
+  ],
+  "generation_params": {
+    "fs": 20000000.0,
+    "N": 32768,
+    "duration_ms": 1.6384,
+    "signals": [
+      {
+        "type": "2FSK",
+        "center_frequency_MHz": -3.4998060471409094,
+        "symbol_rate_kHz": 237.86646057539144,
+        "freq_deviation_kHz": 161.99375827504744,
+        "modulation_index": 0.68,
+        "M": 2,
+        "power_dBm": -35.6,
+        "bandwidth_MHz": 0.8
+      },
+      {
+        "type": "QPSK",
+        "center_frequency_MHz": 3.4997891114402218,
+        "symbol_rate_kHz": 250.0,
+        "rolloff": 0.2,
+        "M": 4,
+        "bits_per_symbol": 2,
+        "power_dBm": -35.4,
+        "bandwidth_MHz": 0.3
+      },
+      {
+        "type": "Chirp (LFM)",
+        "center_frequency_MHz": 7.0,
+        "sweep_start_MHz": 5.020600735483225,
+        "sweep_end_MHz": 8.979399264516774,
+        "bandwidth_MHz": 3.9587985290335492,
+        "chirp_rate_MHz_per_ms": 2.42,
+        "time_bandwidth_product": 6486.1,
+        "processing_gain_dB": 38.1,
+        "range_resolution_m": 37.89,
+        "power_dBm": -34.0
+      },
+      {
+        "type": "FM",
+        "center_frequency_MHz": -7.874524440637343,
+        "frequency_deviation_kHz": 261.9716489256406,
+        "modulating_frequency_kHz": 19.536359028905856,
+        "max_modulating_freq_kHz": 105.7,
+        "modulation_index": 2.48,
+        "carson_bandwidth_kHz": 735.4,
+        "power_dBm": -32.3,
+        "bandwidth_MHz": 0.735
+      }
+    ],
+    "noise_floor_dBm": "-52",
+    "seed": 1020
+  }
+}

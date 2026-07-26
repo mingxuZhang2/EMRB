@@ -1,0 +1,245 @@
+{
+  "sample_id": "EMRB_L3_4012",
+  "level": "L3",
+  "archetype": "C_8psk_am",
+  "archetype_desc": "8PSK + AM + Chirp",
+  "total_points": 100,
+  "num_questions": 5,
+  "question": "You are an electromagnetic signal analysis expert. Below is I/Q signal data captured from an electromagnetic environment.\n\nSignal file: EMRB_L3_4012.npy\nSampling rate: 20 MHz\nNumber of samples: 32768\nData format: complex64 (numpy)\nRecording duration: 1.6384 ms\n\nThere are 3 non-overlapping independent signal sources in this band. Based on a preliminary scan, they are distributed as follows:\n  - Approx. +2.4 MHz: digitally modulated signal\n  - Approx. -4.5 MHz: analog AM signal\n  - Approx. -9.2~-4.8 MHz: linear frequency modulated (chirp) signal\n\nPlease analyze these signals and answer the following questions:\n\nQ1. For the digitally modulated signal at +2.4 MHz:\n    (a) Identify its modulation scheme (BPSK/QPSK/8PSK/16QAM/64QAM, etc.) and estimate the symbol rate Rs (ksps).\n    (b) Calculate the raw bitrate Rb = Rs × log₂(M) (kbps).\n    (c) Calculate the spectral efficiency η = Rb / BW (bps/Hz), where BW is the occupied bandwidth.\n    (d) If the same symbol rate were used with 64QAM instead, what bitrate (kbps) could be achieved?\n\nQ2. Given that the noise floor is -49.0 dBm/20MHz. For the digital signal at +2.4 MHz:\n    (a) Calculate the noise power (dBm) within its occupied bandwidth and the signal-to-noise ratio SNR (dB).\n    (b) Convert SNR to Eb/N0 using Eb/N0 (dB) = SNR (dB) - 10·log₁₀(η).\n    (c) What is the theoretical minimum Eb/N0 (dB) required to achieve BER = 10⁻⁵ for this modulation scheme over an AWGN channel?\n    (d) Does the current Eb/N0 meet the BER = 10⁻⁵ requirement? What is the margin (dB)?\n\nQ3. The following signals are present in this band: 8PSK(+2.4MHz), AM-DSB(-4.5MHz), Chirp (LFM)(-7.0MHz).\n    (a) Estimate the peak-to-average power ratio (PAPR) (dB) for each signal.\n        Hint: Constant-envelope signals (e.g., FM, Chirp) have PAPR close to 0 dB.\n    (b) If these signals were to pass through the same power amplifier (PA), which signal is best suited for a nonlinear PA? Which is least suited? Why?\n    (c) Assume the PA's 1 dB compression point is P1dB = -22 dBm.\n        For the digital signal at +2.4 MHz (average power approximately -34.6 dBm),\n        calculate whether its peak power exceeds P1dB. Will nonlinear distortion occur?\n    (d) Calculate the input back-off (IBO = P1dB - P_avg) (dB) for this digital signal,\n        and explain how the back-off amount affects PA efficiency.\n\nQ4. Receiver dynamic range and ADC requirements:\n    (a) Estimate the power (dBm) of the strongest and weakest signals in the band, and calculate the inter-signal dynamic range.\n    (b) Considering the peak power from coherent addition of 3 signals (+10·log₁₀(3)), plus a 3 dB margin,\n        estimate the effective peak power (dBm).\n    (c) Using the noise floor at 1 kHz resolution bandwidth as a reference, calculate the total dynamic range (dB) from effective peak to noise floor.\n    (d) ADC effective dynamic range = 6.02 × ENOB + 1.76 dB. How many bits are needed at minimum? Is 10 bits sufficient?\n\nQ5. If only the digital signal at +2.4 MHz needs to be received:\n    (a) How many MHz must the signal be frequency-shifted to baseband by digital down-conversion (DDC)?\n    (b) What should the low-pass filter cutoff frequency be set to (kHz)? (Cover the signal bandwidth with ~20% margin.)\n    (c) After filtering, what is the maximum decimation factor? What is the new sampling rate (kHz)?\n    (d) Compared to the original 20 MHz sampling rate, by what factor is the data volume reduced? What is the significance?\n\nPlease provide the complete calculation process and numerical results for each question.",
+  "questions": [
+    {
+      "id": "Q1",
+      "question": "For the digitally modulated signal at +2.4 MHz:\n    (a) Identify its modulation scheme (BPSK/QPSK/8PSK/16QAM/64QAM, etc.) and estimate the symbol rate Rs (ksps).\n    (b) Calculate the raw bitrate Rb = Rs × log₂(M) (kbps).\n    (c) Calculate the spectral efficiency η = Rb / BW (bps/Hz), where BW is the occupied bandwidth.\n    (d) If the same symbol rate were used with 64QAM instead, what bitrate (kbps) could be achieved?",
+      "ground_truth": {
+        "type": "8PSK",
+        "M": 8,
+        "symbol_rate_ksps": 150.0,
+        "bits_per_symbol": 3,
+        "bit_rate_kbps": 450.0,
+        "bandwidth_MHz": 0.188,
+        "spectral_efficiency_bps_Hz": 2.394,
+        "bit_rate_64QAM_kbps": 900.0
+      },
+      "rubric": {
+        "points": 20,
+        "mod_type": {
+          "pts": 6
+        },
+        "sym_rate": {
+          "pts": 4,
+          "tol": "±15%"
+        },
+        "bit_rate": {
+          "pts": 3
+        },
+        "spectral_eff": {
+          "pts": 4
+        },
+        "64qam": {
+          "pts": 3
+        },
+        "scoring": "l3-deterministic-v5"
+      }
+    },
+    {
+      "id": "Q2",
+      "question": "Given that the noise floor is -49.0 dBm/20MHz. For the digital signal at +2.4 MHz:\n    (a) Calculate the noise power (dBm) within its occupied bandwidth and the signal-to-noise ratio SNR (dB).\n    (b) Convert SNR to Eb/N0 using Eb/N0 (dB) = SNR (dB) - 10·log₁₀(η).\n    (c) What is the theoretical minimum Eb/N0 (dB) required to achieve BER = 10⁻⁵ for this modulation scheme over an AWGN channel?\n    (d) Does the current Eb/N0 meet the BER = 10⁻⁵ requirement? What is the margin (dB)?",
+      "ground_truth": {
+        "noise_in_band_dBm": -69.3,
+        "SNR_dB": 34.7,
+        "EbN0_dB": 30.9,
+        "EbN0_required_dB": 13.0,
+        "margin_dB": 17.9,
+        "feasible": true
+      },
+      "rubric": {
+        "points": 20,
+        "SNR": {
+          "pts": 5,
+          "tol": "±3dB"
+        },
+        "EbN0": {
+          "pts": 5
+        },
+        "required": {
+          "pts": 5
+        },
+        "margin": {
+          "pts": 5,
+          "tol": "±3dB"
+        },
+        "scoring": "l3-deterministic-v5"
+      }
+    },
+    {
+      "id": "Q3",
+      "question": "The following signals are present in this band: 8PSK(+2.4MHz), AM-DSB(-4.5MHz), Chirp (LFM)(-7.0MHz).\n    (a) Estimate the peak-to-average power ratio (PAPR) (dB) for each signal.\n        Hint: Constant-envelope signals (e.g., FM, Chirp) have PAPR close to 0 dB.\n    (b) If these signals were to pass through the same power amplifier (PA), which signal is best suited for a nonlinear PA? Which is least suited? Why?\n    (c) Assume the PA's 1 dB compression point is P1dB = -22 dBm.\n        For the digital signal at +2.4 MHz (average power approximately -34.6 dBm),\n        calculate whether its peak power exceeds P1dB. Will nonlinear distortion occur?\n    (d) Calculate the input back-off (IBO = P1dB - P_avg) (dB) for this digital signal,\n        and explain how the back-off amount affects PA efficiency.",
+      "ground_truth": {
+        "papr_per_signal": [
+          {
+            "signal_id": 1,
+            "type": "8PSK",
+            "PAPR_dB": 4.6,
+            "constant_envelope": false
+          },
+          {
+            "signal_id": 2,
+            "type": "AM-DSB",
+            "PAPR_dB": 4.0,
+            "constant_envelope": false
+          },
+          {
+            "signal_id": 3,
+            "type": "Chirp (LFM)",
+            "PAPR_dB": 0.0,
+            "constant_envelope": true
+          }
+        ],
+        "best_for_PA": {
+          "signal": "Chirp (LFM)",
+          "PAPR_dB": 0.0
+        },
+        "worst_for_PA": {
+          "signal": "8PSK",
+          "PAPR_dB": 4.6
+        },
+        "best_for_PA_accepted": [
+          "Chirp (LFM)"
+        ],
+        "worst_for_PA_accepted": [
+          "8PSK"
+        ],
+        "P1dB_dBm": -22,
+        "digital_signal_type": "8PSK",
+        "digital_avg_power_dBm": -34.6,
+        "digital_PAPR_dB": 4.6,
+        "digital_peak_dBm": -30.0,
+        "exceeds_P1dB": false,
+        "IBO_dB": 12.6
+      },
+      "rubric": {
+        "points": 20,
+        "papr_estimation": {
+          "pts": 5,
+          "tol": "±2dB",
+          "note": "FM/Chirp≈0dB, PSK/QAM>0"
+        },
+        "pa_suitability": {
+          "pts": 5,
+          "note": "constant envelope best suited, high-order QAM least suited"
+        },
+        "p1db_analysis": {
+          "pts": 5,
+          "note": "peak=avg+PAPR vs P1dB"
+        },
+        "ibo_efficiency": {
+          "pts": 5,
+          "note": "larger IBO means lower PA efficiency"
+        },
+        "scoring": "l3-deterministic-v5"
+      }
+    },
+    {
+      "id": "Q4",
+      "question": "Receiver dynamic range and ADC requirements:\n    (a) Estimate the power (dBm) of the strongest and weakest signals in the band, and calculate the inter-signal dynamic range.\n    (b) Considering the peak power from coherent addition of 3 signals (+10·log₁₀(3)), plus a 3 dB margin,\n        estimate the effective peak power (dBm).\n    (c) Using the noise floor at 1 kHz resolution bandwidth as a reference, calculate the total dynamic range (dB) from effective peak to noise floor.\n    (d) ADC effective dynamic range = 6.02 × ENOB + 1.76 dB. How many bits are needed at minimum? Is 10 bits sufficient?",
+      "ground_truth": {
+        "strongest_dBm": -31.1,
+        "weakest_dBm": -34.6,
+        "signal_DR_dB": 3.5,
+        "effective_peak_dBm": -23.3,
+        "noise_1kHz_dBm": -92.0,
+        "total_DR_dB": 68.7,
+        "min_ENOB": 12,
+        "DR_10bit_dB": 62.0,
+        "ten_bit_ok": false
+      },
+      "rubric": {
+        "points": 20,
+        "powers": {
+          "pts": 4,
+          "tol": "±3dB"
+        },
+        "peak": {
+          "pts": 5
+        },
+        "DR": {
+          "pts": 5,
+          "tol": "±5dB"
+        },
+        "ENOB": {
+          "pts": 6
+        },
+        "scoring": "l3-deterministic-v5"
+      }
+    },
+    {
+      "id": "Q5",
+      "question": "If only the digital signal at +2.4 MHz needs to be received:\n    (a) How many MHz must the signal be frequency-shifted to baseband by digital down-conversion (DDC)?\n    (b) What should the low-pass filter cutoff frequency be set to (kHz)? (Cover the signal bandwidth with ~20% margin.)\n    (c) After filtering, what is the maximum decimation factor? What is the new sampling rate (kHz)?\n    (d) Compared to the original 20 MHz sampling rate, by what factor is the data volume reduced? What is the significance?",
+      "ground_truth": {
+        "freq_shift_MHz": -2.393986035654554,
+        "LPF_cutoff_kHz": 112.8,
+        "decimation": 88,
+        "new_rate_kHz": 227.3,
+        "data_reduction": 88
+      },
+      "rubric": {
+        "points": 20,
+        "shift": {
+          "pts": 4
+        },
+        "lpf": {
+          "pts": 5,
+          "tol": "±30%"
+        },
+        "decim": {
+          "pts": 6,
+          "tol": "±factor_of_2"
+        },
+        "reduction": {
+          "pts": 5
+        },
+        "scoring": "l3-deterministic-v5"
+      }
+    }
+  ],
+  "generation_params": {
+    "fs": 20000000.0,
+    "N": 32768,
+    "duration_ms": 1.6384,
+    "signals": [
+      {
+        "type": "8PSK",
+        "center_frequency_MHz": 2.393986035654554,
+        "symbol_rate_kHz": 150.0,
+        "rolloff": 0.25,
+        "M": 8,
+        "bits_per_symbol": 3,
+        "power_dBm": -34.6,
+        "bandwidth_MHz": 0.188
+      },
+      {
+        "type": "AM-DSB",
+        "center_frequency_MHz": -4.477227550372654,
+        "modulation_depth": 0.89,
+        "modulating_frequency_kHz": 7.776607921307766,
+        "efficiency": 0.284,
+        "power_dBm": -33.4,
+        "bandwidth_MHz": 0.016
+      },
+      {
+        "type": "Chirp (LFM)",
+        "center_frequency_MHz": -6.993929271391279,
+        "sweep_start_MHz": -9.187594894964297,
+        "sweep_end_MHz": -4.800263647818261,
+        "bandwidth_MHz": 4.387331247146035,
+        "chirp_rate_MHz_per_ms": 2.68,
+        "time_bandwidth_product": 7188.2,
+        "processing_gain_dB": 38.6,
+        "range_resolution_m": 34.19,
+        "power_dBm": -31.1
+      }
+    ],
+    "noise_floor_dBm": -49.0,
+    "seed": 4012
+  }
+}

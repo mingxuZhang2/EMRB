@@ -1,0 +1,245 @@
+{
+  "sample_id": "EMRB_L4_1011",
+  "level": "L4",
+  "archetype": "C_radar_comms",
+  "archetype_desc": "Radar + communications coexistence",
+  "total_points": 100,
+  "question": "You are an electromagnetic signal analysis expert. Below is I/Q signal data collected from a complex electromagnetic environment.\n\nSignal file: EMRB_L4_1011.npy\nSample rate: 20 MHz\nNumber of samples: 32768\nData format: complex64 (numpy)\nRecording duration: 1.6384 ms\n\nMultiple independent signal sources exist within this frequency band (spectral overlap and burst signals may be present).\nPlease first analyze the signal environment on your own, then answer the following questions:\n\nQ1. There are two digitally modulated signals in the -6.5~-1.8 MHz region. Please estimate their symbol rates (ksym/s) and modulation orders respectively, and explain how you distinguished between the two signals.\n\nQ2. There is a linear frequency modulated (Chirp) signal in the +4~+7 MHz range. Please calculate: (a) time-bandwidth product (TBP), (b) processing gain after matched filtering (dB), (c) if this chirp is used for radar ranging, what is the corresponding range resolution in meters?\n\nQ3. There is a burst signal near +2.0 MHz. Please answer: (a) What is the modulation type of this signal? (b) What is its duty cycle over the entire recording? (c) If detecting this signal using a full-band FFT, how much will the FFT output SNR decrease (in dB) compared to the SNR during the signal's active period? Please derive the result.\n\nQ4. Analyze the spectral environment comprehensively: if deploying a new 64QAM communication link in the -2.51~+1.52 MHz spectral gap (rolloff=0.25), (a) what is the maximum available contiguous bandwidth in MHz? (b) what is the maximum achievable data rate in kbps? (c) under the current noise environment (noise floor approx. -48 dBm/20MHz), what minimum received signal power in the link bandwidth is required to meet the minimum SNR for 64QAM (23 dB)?\n\nQ5. For the 8PSK signal at -5.5 MHz, given a noise floor of -48 dBm/20MHz: (a) estimate the SNR (dB) of this signal within its occupied bandwidth. (b) According to the Shannon formula, what is the theoretical channel capacity upper bound in Mbps? (c) How far is the current modulation scheme's spectral efficiency (3 bits/symbol) from the Shannon limit?\n\nPlease provide a complete reasoning process and numerical results for each question.",
+  "questions": [
+    {
+      "id": "Q1",
+      "question_type": "QT01",
+      "question": "There are two digitally modulated signals in the -6.5~-1.8 MHz region. Please estimate their symbol rates (ksym/s) and modulation orders respectively, and explain how you distinguished between the two signals.",
+      "ground_truth": {
+        "signal_1": {
+          "type": "QPSK",
+          "symbol_rate_ksps": 400.0,
+          "M": 4,
+          "center_frequency_MHz": -2.7756344751423985
+        },
+        "signal_2": {
+          "type": "8PSK",
+          "symbol_rate_ksps": 300.0,
+          "M": 8,
+          "center_frequency_MHz": -5.468830822609161
+        }
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "symbol_rate_1": {
+          "pts": 4,
+          "tolerance": "±15%",
+          "answer": 400.0
+        },
+        "mod_order_1": {
+          "pts": 4,
+          "scoring": {
+            "QPSK": 4,
+            "PSK": 2,
+            "QAM": 2,
+            "digital": 1
+          },
+          "answer": "QPSK"
+        },
+        "symbol_rate_2": {
+          "pts": 4,
+          "tolerance": "±15%",
+          "answer": 300.0
+        },
+        "mod_order_2": {
+          "pts": 4,
+          "scoring": {
+            "8PSK": 4,
+            "PSK": 2,
+            "QAM": 2,
+            "digital": 1
+          },
+          "answer": "8PSK"
+        },
+        "reasoning": {
+          "pts": 4,
+          "note": "Whether the analysis method is reasonable (spectral nulls, cyclostationary, etc.)"
+        }
+      }
+    },
+    {
+      "id": "Q2",
+      "question_type": "QT03",
+      "question": "There is a linear frequency modulated (Chirp) signal in the +4~+7 MHz range. Please calculate: (a) time-bandwidth product (TBP), (b) processing gain after matched filtering (dB), (c) if this chirp is used for radar ranging, what is the corresponding range resolution in meters?",
+      "ground_truth": {
+        "TBP": 5676.0,
+        "processing_gain_dB": 37.5,
+        "range_resolution_m": 43.3
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "TBP": {
+          "pts": 7,
+          "tolerance": "±10%"
+        },
+        "processing_gain": {
+          "pts": 7,
+          "tolerance": "±1dB"
+        },
+        "range_resolution": {
+          "pts": 6,
+          "tolerance": "±10%"
+        }
+      }
+    },
+    {
+      "id": "Q3",
+      "question_type": "QT04",
+      "question": "There is a burst signal near +2.0 MHz. Please answer: (a) What is the modulation type of this signal? (b) What is its duty cycle over the entire recording? (c) If detecting this signal using a full-band FFT, how much will the FFT output SNR decrease (in dB) compared to the SNR during the signal's active period? Please derive the result.",
+      "ground_truth": {
+        "modulation": "BPSK",
+        "duty_cycle": 0.39,
+        "snr_loss_dB": -4.1
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "modulation": {
+          "pts": 5,
+          "scoring": {
+            "BPSK": 5,
+            "PSK": 3,
+            "digital": 1
+          }
+        },
+        "duty_cycle": {
+          "pts": 5,
+          "tolerance": "±0.05"
+        },
+        "snr_loss_value": {
+          "pts": 6,
+          "tolerance": "±1dB",
+          "note": "SNR_loss=10log10(duty_cycle); sign-agnostic"
+        },
+        "snr_loss_derivation": {
+          "pts": 4,
+          "note": "derivation must invoke 10log10 of the duty cycle"
+        }
+      }
+    },
+    {
+      "id": "Q4",
+      "question_type": "QT05",
+      "question": "Analyze the spectral environment comprehensively: if deploying a new 64QAM communication link in the -2.51~+1.52 MHz spectral gap (rolloff=0.25), (a) what is the maximum available contiguous bandwidth in MHz? (b) what is the maximum achievable data rate in kbps? (c) under the current noise environment (noise floor approx. -48 dBm/20MHz), what minimum received signal power in the link bandwidth is required to meet the minimum SNR for 64QAM (23 dB)?",
+      "ground_truth": {
+        "available_gap_MHz": 4.023,
+        "symbol_rate_ksps": 3218.4,
+        "data_rate_kbps": 19310.3,
+        "required_power_dBm": -32.0
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "bandwidth": {
+          "pts": 6,
+          "tolerance": "±0.05MHz"
+        },
+        "data_rate": {
+          "pts": 7,
+          "tolerance": "±20%"
+        },
+        "power": {
+          "pts": 7,
+          "tolerance": "±3dB"
+        }
+      }
+    },
+    {
+      "id": "Q5",
+      "question_type": "QT10",
+      "question": "For the 8PSK signal at -5.5 MHz, given a noise floor of -48 dBm/20MHz: (a) estimate the SNR (dB) of this signal within its occupied bandwidth. (b) According to the Shannon formula, what is the theoretical channel capacity upper bound in Mbps? (c) How far is the current modulation scheme's spectral efficiency (3 bits/symbol) from the Shannon limit?",
+      "ground_truth": {
+        "snr_dB": 29.6,
+        "shannon_capacity_Mbps": 4.13,
+        "spectral_efficiency_gap": 7.68,
+        "accepted_conventions": [
+          {
+            "snr_dB": 29.6,
+            "shannon_capacity_Mbps": 4.13,
+            "spectral_efficiency_gap": [
+              6.83,
+              7.68
+            ]
+          }
+        ]
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "snr": {
+          "pts": 6,
+          "tolerance": "±3dB"
+        },
+        "capacity": {
+          "pts": 8,
+          "tolerance": "±20%"
+        },
+        "gap_analysis": {
+          "pts": 6,
+          "note": "Correctly computes the gap between current efficiency and the Shannon limit"
+        }
+      }
+    }
+  ],
+  "generation_params": {
+    "fs": 20000000.0,
+    "N": 32768,
+    "duration_ms": 1.6384,
+    "signals": [
+      {
+        "type": "Chirp (LFM)",
+        "center_frequency_MHz": 5.5,
+        "sweep_start_MHz": 3.7678242669205133,
+        "sweep_end_MHz": 7.232175733079487,
+        "bandwidth_MHz": 3.464351466158973,
+        "chirp_rate_MHz_per_ms": 2.11,
+        "time_bandwidth_product": 5676.0,
+        "processing_gain_dB": 37.5,
+        "range_resolution_m": 43.3,
+        "power_dBm": -34.6
+      },
+      {
+        "type": "QPSK",
+        "center_frequency_MHz": -2.7756344751423985,
+        "symbol_rate_kHz": 400.0,
+        "rolloff": 0.35,
+        "M": 4,
+        "bits_per_symbol": 2,
+        "power_dBm": -34.3,
+        "bandwidth_MHz": 0.54
+      },
+      {
+        "type": "8PSK",
+        "center_frequency_MHz": -5.468830822609161,
+        "symbol_rate_kHz": 300.0,
+        "rolloff": 0.4,
+        "M": 8,
+        "bits_per_symbol": 3,
+        "power_dBm": -35.2,
+        "bandwidth_MHz": 0.42
+      },
+      {
+        "type": "BPSK (burst)",
+        "center_frequency_MHz": 1.9863394572881192,
+        "symbol_rate_kHz": 750.0,
+        "rolloff": 0.25,
+        "M": 2,
+        "bits_per_symbol": 1,
+        "power_dBm": -35.4,
+        "bandwidth_MHz": 0.938,
+        "active_window": "39%-78%",
+        "duty_cycle": 0.39,
+        "snr_loss_dB": -4.1
+      }
+    ],
+    "noise_floor_dBm": "-48",
+    "seed": 1011
+  }
+}

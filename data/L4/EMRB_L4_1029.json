@@ -1,0 +1,230 @@
+{
+  "sample_id": "EMRB_L4_1029",
+  "level": "L4",
+  "archetype": "F_burst_heavy",
+  "archetype_desc": "Multiple burst signals (TDMA-like)",
+  "total_points": 100,
+  "question": "You are an electromagnetic signal analysis expert. Below is I/Q signal data collected from a complex electromagnetic environment.\n\nSignal file: EMRB_L4_1029.npy\nSample rate: 20 MHz\nNumber of samples: 32768\nData format: complex64 (numpy)\nRecording duration: 1.6384 ms\n\nMultiple independent signal sources exist within this frequency band (spectral overlap and burst signals may be present).\nPlease first analyze the signal environment on your own, then answer the following questions:\n\nQ1. There is a digitally modulated signal near +4.9 MHz. Please estimate its symbol rate (ksym/s) and modulation order.\n\nQ2. For the FM signal near -4.4 MHz, please estimate: (a) frequency deviation (kHz), (b) maximum modulating frequency (kHz), (c) modulation index beta, (d) verify whether the observed bandwidth is consistent with Carson's rule.\n\nQ3. There is a burst signal near +1.8 MHz. Please answer: (a) What is the modulation type of this signal? (b) What is its duty cycle over the entire recording? (c) If detecting this signal using a full-band FFT, how much will the FFT output SNR decrease (in dB) compared to the SNR during the signal's active period? Please derive the result.\n\nQ4. Analyze the spectral environment comprehensively: if deploying a new 16QAM communication link in the -2.51~+1.66 MHz spectral gap (rolloff=0.25), (a) what is the maximum available contiguous bandwidth in MHz? (b) what is the maximum achievable data rate in kbps? (c) under the current noise environment (noise floor approx. -50 dBm/20MHz), what minimum received signal power in the link bandwidth is required to meet the minimum SNR for 16QAM (17 dB)?\n\nQ5. For the 16QAM signal at +4.9 MHz, given a noise floor of -50 dBm/20MHz: (a) estimate the SNR (dB) of this signal within its occupied bandwidth. (b) According to the Shannon formula, what is the theoretical channel capacity upper bound in Mbps? (c) How far is the current modulation scheme's spectral efficiency (4 bits/symbol) from the Shannon limit?\n\nPlease provide a complete reasoning process and numerical results for each question.",
+  "questions": [
+    {
+      "id": "Q1",
+      "question_type": "QT01",
+      "question": "There is a digitally modulated signal near +4.9 MHz. Please estimate its symbol rate (ksym/s) and modulation order.",
+      "ground_truth": {
+        "symbol_rate_ksps": 200.0,
+        "type": "16QAM",
+        "M": 16,
+        "center_frequency_MHz": 4.872981832167447
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "symbol_rate": {
+          "pts": 10,
+          "tolerance": "±15%",
+          "answer": 200.0
+        },
+        "mod_order": {
+          "pts": 10,
+          "answer": "16QAM"
+        }
+      }
+    },
+    {
+      "id": "Q2",
+      "question_type": "QT02",
+      "question": "For the FM signal near -4.4 MHz, please estimate: (a) frequency deviation (kHz), (b) maximum modulating frequency (kHz), (c) modulation index beta, (d) verify whether the observed bandwidth is consistent with Carson's rule.",
+      "ground_truth": {
+        "frequency_deviation_kHz": 221.11462391922666,
+        "max_modulating_freq_kHz": 48.9,
+        "modulation_index": 4.52,
+        "modulation_index_accepted": [
+          4.52,
+          12.56
+        ],
+        "carson_bandwidth_kHz": 540.0,
+        "carson_bandwidth_accepted_kHz": [
+          540.0
+        ]
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "deviation": {
+          "pts": 6,
+          "tolerance": "±20%"
+        },
+        "mod_freq": {
+          "pts": 5,
+          "tolerance": "±30%"
+        },
+        "mod_index": {
+          "pts": 4,
+          "tolerance": "±30%"
+        },
+        "carson_value": {
+          "pts": 3,
+          "tolerance": "±20%"
+        },
+        "carson_verdict": {
+          "pts": 2,
+          "note": "observed bandwidth is consistent with Carson by construction"
+        }
+      }
+    },
+    {
+      "id": "Q3",
+      "question_type": "QT04",
+      "question": "There is a burst signal near +1.8 MHz. Please answer: (a) What is the modulation type of this signal? (b) What is its duty cycle over the entire recording? (c) If detecting this signal using a full-band FFT, how much will the FFT output SNR decrease (in dB) compared to the SNR during the signal's active period? Please derive the result.",
+      "ground_truth": {
+        "modulation": "QPSK",
+        "duty_cycle": 0.42,
+        "snr_loss_dB": -3.7
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "modulation": {
+          "pts": 5,
+          "scoring": {
+            "QPSK": 5,
+            "PSK": 3,
+            "digital": 1
+          }
+        },
+        "duty_cycle": {
+          "pts": 5,
+          "tolerance": "±0.05"
+        },
+        "snr_loss_value": {
+          "pts": 6,
+          "tolerance": "±1dB",
+          "note": "SNR_loss=10log10(duty_cycle); sign-agnostic"
+        },
+        "snr_loss_derivation": {
+          "pts": 4,
+          "note": "derivation must invoke 10log10 of the duty cycle"
+        }
+      }
+    },
+    {
+      "id": "Q4",
+      "question_type": "QT05",
+      "question": "Analyze the spectral environment comprehensively: if deploying a new 16QAM communication link in the -2.51~+1.66 MHz spectral gap (rolloff=0.25), (a) what is the maximum available contiguous bandwidth in MHz? (b) what is the maximum achievable data rate in kbps? (c) under the current noise environment (noise floor approx. -50 dBm/20MHz), what minimum received signal power in the link bandwidth is required to meet the minimum SNR for 16QAM (17 dB)?",
+      "ground_truth": {
+        "available_gap_MHz": 4.171,
+        "symbol_rate_ksps": 3336.7,
+        "data_rate_kbps": 13346.8,
+        "required_power_dBm": -39.8
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "bandwidth": {
+          "pts": 6,
+          "tolerance": "±0.05MHz"
+        },
+        "data_rate": {
+          "pts": 7,
+          "tolerance": "±20%"
+        },
+        "power": {
+          "pts": 7,
+          "tolerance": "±3dB"
+        }
+      }
+    },
+    {
+      "id": "Q5",
+      "question_type": "QT10",
+      "question": "For the 16QAM signal at +4.9 MHz, given a noise floor of -50 dBm/20MHz: (a) estimate the SNR (dB) of this signal within its occupied bandwidth. (b) According to the Shannon formula, what is the theoretical channel capacity upper bound in Mbps? (c) How far is the current modulation scheme's spectral efficiency (4 bits/symbol) from the Shannon limit?",
+      "ground_truth": {
+        "snr_dB": 35.2,
+        "shannon_capacity_Mbps": 3.04,
+        "spectral_efficiency_gap": 8.6,
+        "accepted_conventions": [
+          {
+            "snr_dB": 35.2,
+            "shannon_capacity_Mbps": 3.04,
+            "spectral_efficiency_gap": [
+              7.68,
+              8.6
+            ]
+          }
+        ]
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "snr": {
+          "pts": 6,
+          "tolerance": "±3dB"
+        },
+        "capacity": {
+          "pts": 8,
+          "tolerance": "±20%"
+        },
+        "gap_analysis": {
+          "pts": 6,
+          "note": "Correctly computes the gap between current efficiency and the Shannon limit"
+        }
+      }
+    }
+  ],
+  "generation_params": {
+    "fs": 20000000.0,
+    "N": 32768,
+    "duration_ms": 1.6384,
+    "signals": [
+      {
+        "type": "QPSK (burst)",
+        "center_frequency_MHz": 1.8195391600650617,
+        "symbol_rate_kHz": 250.0,
+        "rolloff": 0.3,
+        "M": 4,
+        "bits_per_symbol": 2,
+        "power_dBm": -28.4,
+        "bandwidth_MHz": 0.325,
+        "active_window": "34%-76%",
+        "duty_cycle": 0.42,
+        "snr_loss_dB": -3.7
+      },
+      {
+        "type": "BPSK (burst)",
+        "center_frequency_MHz": -2.7503459637690053,
+        "symbol_rate_kHz": 350.0,
+        "rolloff": 0.35,
+        "M": 2,
+        "bits_per_symbol": 1,
+        "power_dBm": -32.8,
+        "bandwidth_MHz": 0.473,
+        "active_window": "21%-73%",
+        "duty_cycle": 0.52,
+        "snr_loss_dB": -2.9
+      },
+      {
+        "type": "16QAM",
+        "center_frequency_MHz": 4.872981832167447,
+        "symbol_rate_kHz": 200.0,
+        "rolloff": 0.3,
+        "M": 16,
+        "bits_per_symbol": 4,
+        "power_dBm": -33.7,
+        "bandwidth_MHz": 0.26
+      },
+      {
+        "type": "FM",
+        "center_frequency_MHz": -4.44548495791277,
+        "frequency_deviation_kHz": 221.11462391922666,
+        "modulating_frequency_kHz": 17.59775638192075,
+        "max_modulating_freq_kHz": 48.9,
+        "modulation_index": 4.52,
+        "carson_bandwidth_kHz": 540.0,
+        "power_dBm": -36.5,
+        "bandwidth_MHz": 0.54
+      }
+    ],
+    "noise_floor_dBm": "-50",
+    "seed": 1029
+  }
+}

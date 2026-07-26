@@ -1,0 +1,322 @@
+{
+  "sample_id": "EMRB_L2_6009",
+  "level": "L2",
+  "archetype": "B_16qam_fm_chirp_burst",
+  "archetype_desc": "16QAM + FM + Chirp + burst_BPSK",
+  "total_points": 100,
+  "num_questions": 5,
+  "question": "You are an electromagnetic signal analysis expert. Below is I/Q signal data collected from an electromagnetic environment.\n\nSignal file: EMRB_L2_6009.npy\nSampling rate: 20 MHz\nNumber of samples: 32768\nData format: complex64 (numpy)\nRecording duration: 1.6384 ms\n\nThere are 4 signals present in this frequency band. Preliminary spectral scan results are as follows:\n  - Approx. -1.3 MHz: digitally modulated signal\n  - Approx. -5.9 MHz: analog modulated signal\n  - Approx. +4.5~+7.4 MHz: linear frequency modulated (chirp) signal\n  - Approx. +1.5 MHz: digitally modulated signal (burst mode)\n\nPlease analyze these signals and answer the following questions:\n\nQ1. Spectral analysis parameters & windowing:\n    (a) Given sampling rate fs = 20 MHz, number of samples N = 32768.\n        Compute the current FFT frequency resolution Δf = fs/N (Hz). (4 pts)\n    (b) Rectangular window vs Hamming window comparison:\n        - How does the main lobe width change? (Rectangular: 1×Δf, Hamming: 1.81×Δf)\n        - How does the sidelobe level change? (Rectangular: -13dB, Hamming: -42dB)\n        For multi-signal analysis in this frequency band, which window function is more suitable? Explain your reasoning. (6 pts)\n    (c) Given that the frequency separation between the two closest signals in this band is approximately 2.78 MHz,\n        what is the minimum observation time needed to resolve these two signals in the frequency domain? (4 pts)\n    (d) Using the Welch method (50% overlap, 8 segments) for power spectral density estimation:\n        - How many samples are needed per segment?\n        - By how many dB is the spectral estimation variance reduced? (6 pts)\n\nQ2. For the 16QAM digitally modulated signal at -1.3 MHz (symbol rate Rs ≈ 250 ksps, roll-off factor α = 0.3):\n    (a) Estimate its 3dB bandwidth (the frequency span at which power drops by half) (Hz). (5 pts)\n    (b) Estimate its 99% power bandwidth (the bandwidth containing 99% of the signal energy) (Hz). (5 pts)\n    (c) Estimate its null-to-null bandwidth (Hz). (5 pts)\n    (d) Why do these three bandwidth definitions yield different values?\n        For frequency planning (allocating frequency bands to signals), which definition is most appropriate? Why? (5 pts)\n\nQ3. Autocorrelation & periodicity analysis (answer format version: emrb-l2-autocorr-v1):\n    (a) Compute the autocorrelation of the full received signal x with the FFT method:\n        R(τ) = IFFT(|FFT(x)|²), normalized so that R(0) = 1, and work with the magnitude |R(τ)|.\n        Over the delay range 20 μs ≤ τ < 819.2 μs (smaller delays are dominated by\n        pulse-shaping and chirp correlation structure and are excluded), report the maximum value\n        of |R(τ)| (a number between 0 and 1). (4 pts)\n    (b) In the same delay range, |R(τ)| exhibits a set of strong, equally spaced peaks (a periodic comb).\n        Report the spacing Δτ between consecutive comb peaks, in μs. (6 pts)\n    (c) This periodicity is produced by exactly one signal in the band. Which signal is it (modulation\n        type), and what is the corresponding modulating frequency f_mod = 1/Δτ, in kHz? (3+3 pts)\n    (d) If the received signal is bandpass filtered so that only the FM signal near\n        -5.9 MHz remains, does the peak comb with spacing Δτ persist in |R(τ)|?\n        Answer true or false and briefly explain why. (4 pts)\n    In the final answer, return this question as one single-line JSON object:\n    {\"max_R_magnitude\": <number>, \"comb_spacing_us\": <number>, \"source_signal\": \"<modulation type>\",\n    \"modulating_freq_kHz\": <number>, \"comb_persists_after_filtering\": <true|false>,\n    \"explanation\": \"<1-2 sentences>\"}\n\nQ4. Time-frequency analysis (STFT/Spectrogram):\n    (a) Generate a spectrogram using STFT (Short-Time Fourier Transform) and describe the main visible features.\n        (Hint: focus on the morphological differences of different signals on the time-frequency plane) (4 pts)\n    (b) Estimate the sweep rate (MHz/ms) of the linear frequency modulated (Chirp) signal from the spectrogram.\n        Sweep rate = bandwidth (MHz) / duration (ms). (6 pts)\n    (c) Is there a burst signal in the spectrogram? If so, estimate its start and end times (ms). (6 pts)\n    (d) Relationship between STFT window length and time-frequency resolution: the Heisenberg uncertainty principle requires Δt × Δf ≥ 1.\n        Is it possible to simultaneously achieve a time resolution of 0.1ms and a frequency resolution of 1kHz?\n        Explain why. (4 pts)\n\nQ5. Signal energy & power relationships:\n    (a) Compute the energy of each signal Es = Ps × T (where Ps is the signal power (W), T is the duration (s)).\n        List each signal's power (mW) and energy (J). (5 pts)\n    (b) For the primary digitally modulated signal (-1.3 MHz),\n        compute the energy per bit Eb = Es / total number of bits.\n        Total bits = Rs × log₂(M) × T. (5 pts)\n    (c) Compute the total received power (all signals + noise) (dBm).\n        The noise floor power is approximately -51.0 dBm. (5 pts)\n    (d) Why is the total power of multiple independent signals computed by summing power in mW rather than in dBm?\n        Derive the formula and verify with the data in this problem. (5 pts)\n\nFor each question, provide the complete calculation process and numerical results.",
+  "questions": [
+    {
+      "id": "Q1",
+      "question": "Spectral analysis parameters & windowing:\n    (a) Given sampling rate fs = 20 MHz, number of samples N = 32768.\n        Compute the current FFT frequency resolution Δf = fs/N (Hz). (4 pts)\n    (b) Rectangular window vs Hamming window comparison:\n        - How does the main lobe width change? (Rectangular: 1×Δf, Hamming: 1.81×Δf)\n        - How does the sidelobe level change? (Rectangular: -13dB, Hamming: -42dB)\n        For multi-signal analysis in this frequency band, which window function is more suitable? Explain your reasoning. (6 pts)\n    (c) Given that the frequency separation between the two closest signals in this band is approximately 2.78 MHz,\n        what is the minimum observation time needed to resolve these two signals in the frequency domain? (4 pts)\n    (d) Using the Welch method (50% overlap, 8 segments) for power spectral density estimation:\n        - How many samples are needed per segment?\n        - By how many dB is the spectral estimation variance reduced? (6 pts)",
+      "ground_truth": {
+        "delta_f_Hz": 610.35,
+        "delta_f_formula": "fs/N",
+        "rect_mainlobe": "1×Δf",
+        "rect_sidelobe_dB": -13,
+        "hamming_mainlobe": "1.81×Δf",
+        "hamming_sidelobe_dB": -42,
+        "recommended_window": "Hamming",
+        "window_reason": "In multi-signal scenarios, the Hamming window has lower sidelobes (-42dB vs -13dB), reducing spectral leakage from strong signals into weak signals",
+        "min_freq_sep_MHz": 2.78,
+        "min_observation_time_us": 0.36,
+        "min_observation_formula": "T_min = 1/Δf_sep",
+        "welch_K": 8,
+        "welch_segment_length": 7282,
+        "welch_segment_formula": "L = 2N/(K+1)",
+        "variance_reduction_dB": 9.0,
+        "variance_reduction_formula": "10·log₁₀(K)"
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l2-deterministic-v4",
+        "delta_f": {
+          "pts": 4,
+          "tol": "exact (fs/N)"
+        },
+        "windowing": {
+          "pts": 6,
+          "note": "Hamming better than rectangular (sidelobes 29dB lower); main lobe slightly wider but acceptable; must explain spectral leakage concept"
+        },
+        "min_obs_time": {
+          "pts": 4,
+          "tol": "±20%",
+          "note": "T_min = 1/Δf_sep"
+        },
+        "welch": {
+          "pts": 6,
+          "tol": "±20% on segment length",
+          "note": "variance reduction ≈ 9dB (10log10(8))"
+        }
+      }
+    },
+    {
+      "id": "Q2",
+      "question": "For the 16QAM digitally modulated signal at -1.3 MHz (symbol rate Rs ≈ 250 ksps, roll-off factor α = 0.3):\n    (a) Estimate its 3dB bandwidth (the frequency span at which power drops by half) (Hz). (5 pts)\n    (b) Estimate its 99% power bandwidth (the bandwidth containing 99% of the signal energy) (Hz). (5 pts)\n    (c) Estimate its null-to-null bandwidth (Hz). (5 pts)\n    (d) Why do these three bandwidth definitions yield different values?\n        For frequency planning (allocating frequency bands to signals), which definition is most appropriate? Why? (5 pts)",
+      "ground_truth": {
+        "signal_type": "16QAM",
+        "symbol_rate_kHz": 250.0,
+        "rolloff": 0.3,
+        "bw_3dB_kHz": 250.0,
+        "bw_3dB_formula": "≈ Rs",
+        "bw_99_kHz": 325.0,
+        "bw_99_formula": "≈ Rs × (1 + α)",
+        "bw_null_kHz": 325.0,
+        "bw_null_formula": "≈ Rs × (1 + α) for raised cosine",
+        "best_for_planning": "99% power bandwidth",
+        "reason": "99% power bandwidth is most suitable for frequency planning because it captures nearly all signal energy while accounting for spectral spreading in the roll-off region, making it the practical standard for channel spacing design"
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l2-deterministic-v4",
+        "bw_3dB": {
+          "pts": 5,
+          "tol": "±30%",
+          "note": "≈Rs, accept 0.5Rs~1.5Rs"
+        },
+        "bw_99": {
+          "pts": 5,
+          "tol": "±25%",
+          "note": "≈Rs(1+α)"
+        },
+        "bw_null": {
+          "pts": 5,
+          "tol": "±25%",
+          "note": "≈Rs(1+α) for raised cosine"
+        },
+        "explanation": {
+          "pts": 5,
+          "note": "Must explain the physical meaning differences among definitions; 99% BW or occupied BW is most suitable for frequency planning"
+        }
+      }
+    },
+    {
+      "id": "Q3",
+      "question": "Autocorrelation & periodicity analysis (answer format version: emrb-l2-autocorr-v1):\n    (a) Compute the autocorrelation of the full received signal x with the FFT method:\n        R(τ) = IFFT(|FFT(x)|²), normalized so that R(0) = 1, and work with the magnitude |R(τ)|.\n        Over the delay range 20 μs ≤ τ < 819.2 μs (smaller delays are dominated by\n        pulse-shaping and chirp correlation structure and are excluded), report the maximum value\n        of |R(τ)| (a number between 0 and 1). (4 pts)\n    (b) In the same delay range, |R(τ)| exhibits a set of strong, equally spaced peaks (a periodic comb).\n        Report the spacing Δτ between consecutive comb peaks, in μs. (6 pts)\n    (c) This periodicity is produced by exactly one signal in the band. Which signal is it (modulation\n        type), and what is the corresponding modulating frequency f_mod = 1/Δτ, in kHz? (3+3 pts)\n    (d) If the received signal is bandpass filtered so that only the FM signal near\n        -5.9 MHz remains, does the peak comb with spacing Δτ persist in |R(τ)|?\n        Answer true or false and briefly explain why. (4 pts)\n    In the final answer, return this question as one single-line JSON object:\n    {\"max_R_magnitude\": <number>, \"comb_spacing_us\": <number>, \"source_signal\": \"<modulation type>\",\n    \"modulating_freq_kHz\": <number>, \"comb_persists_after_filtering\": <true|false>,\n    \"explanation\": \"<1-2 sentences>\"}",
+      "ground_truth": {
+        "schema": "emrb-l2-autocorr-v1",
+        "max_R_magnitude": 0.2717,
+        "comb_spacing_us": 91.01,
+        "comb_first_peak_us": 91.05,
+        "comb_first_peak_R": 0.2717,
+        "n_comb_peaks": 9,
+        "source_signal": "FM",
+        "source_signal_type": "FM",
+        "modulating_freq_kHz": 10.986,
+        "theory_period_us": 91.02,
+        "comb_persists_after_filtering": true,
+        "filter_target": "source",
+        "filter_band_MHz": [
+          -6.137,
+          -5.607
+        ],
+        "filtered_comb_residual_prominence": 0.95821,
+        "search_window_us": [
+          20.0,
+          819.2
+        ]
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l2-deterministic-v4",
+        "max_R_magnitude": {
+          "pts": 4,
+          "tol": "abs ±0.08 full, ±0.16 half"
+        },
+        "comb_spacing": {
+          "pts": 6,
+          "tol": "±5% full, ±15% half"
+        },
+        "source_signal": {
+          "pts": 3,
+          "note": "modulation family must match (FM vs AM)"
+        },
+        "modulating_freq": {
+          "pts": 3,
+          "tol": "±5% full, ±15% half"
+        },
+        "filtered": {
+          "pts": 4,
+          "note": "JSON boolean, oracle-verified per scenario. The prose explanation is not separately scored."
+        }
+      }
+    },
+    {
+      "id": "Q4",
+      "question": "Time-frequency analysis (STFT/Spectrogram):\n    (a) Generate a spectrogram using STFT (Short-Time Fourier Transform) and describe the main visible features.\n        (Hint: focus on the morphological differences of different signals on the time-frequency plane) (4 pts)\n    (b) Estimate the sweep rate (MHz/ms) of the linear frequency modulated (Chirp) signal from the spectrogram.\n        Sweep rate = bandwidth (MHz) / duration (ms). (6 pts)\n    (c) Is there a burst signal in the spectrogram? If so, estimate its start and end times (ms). (6 pts)\n    (d) Relationship between STFT window length and time-frequency resolution: the Heisenberg uncertainty principle requires Δt × Δf ≥ 1.\n        Is it possible to simultaneously achieve a time resolution of 0.1ms and a frequency resolution of 1kHz?\n        Explain why. (4 pts)",
+      "ground_truth": {
+        "spectrogram_features": [
+          "Digital modulated signal: appears as a wideband horizontal stripe at a fixed frequency",
+          "FM/AM signal: appears as a narrowband continuous signal at a fixed frequency",
+          "Chirp signal: appears as a diagonal line (frequency varies linearly with time)"
+        ],
+        "chirp_sweep_rate_MHz_per_ms": 1.81,
+        "chirp_bandwidth_MHz": 2.9582705343723092,
+        "has_burst": true,
+        "burst_start_ms": 0.393,
+        "burst_end_ms": 1.13,
+        "uncertainty_possible": false,
+        "uncertainty_product": 0.1,
+        "uncertainty_explanation": "Δt×Δf = 0.1ms × 1kHz = 0.1 < 1, which violates the Heisenberg uncertainty principle, so it is impossible to achieve both resolutions simultaneously. A trade-off is required: shortening the window improves time resolution but degrades frequency resolution, and vice versa.",
+        "burst_signal_type": "BPSK"
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l2-deterministic-v4",
+        "features": {
+          "pts": 4,
+          "note": "Correctly describe time-frequency characteristics of the 3 signal types"
+        },
+        "chirp_rate": {
+          "pts": 6,
+          "tol": "±25%",
+          "note": "sweep rate ≈ 1.81 MHz/ms"
+        },
+        "burst_timing": {
+          "pts": 6,
+          "tol": "±0.1ms",
+          "note": "correct identification of burst presence/absence"
+        },
+        "uncertainty": {
+          "pts": 4,
+          "note": "Δt×Δf=0.1 < 1, impossible"
+        }
+      }
+    },
+    {
+      "id": "Q5",
+      "question": "Signal energy & power relationships:\n    (a) Compute the energy of each signal Es = Ps × T (where Ps is the signal power (W), T is the duration (s)).\n        List each signal's power (mW) and energy (J). (5 pts)\n    (b) For the primary digitally modulated signal (-1.3 MHz),\n        compute the energy per bit Eb = Es / total number of bits.\n        Total bits = Rs × log₂(M) × T. (5 pts)\n    (c) Compute the total received power (all signals + noise) (dBm).\n        The noise floor power is approximately -51.0 dBm. (5 pts)\n    (d) Why is the total power of multiple independent signals computed by summing power in mW rather than in dBm?\n        Derive the formula and verify with the data in this problem. (5 pts)",
+      "ground_truth": {
+        "duration_s": 0.0016384,
+        "energy_per_signal": [
+          {
+            "type": "16QAM",
+            "power_dBm": -33.4,
+            "power_mW": 0.000457,
+            "energy_J": "7.49e-10",
+            "energy_dBJ": -91.3
+          },
+          {
+            "type": "FM",
+            "power_dBm": -32.3,
+            "power_mW": 0.000589,
+            "energy_J": "9.65e-10",
+            "energy_dBJ": -90.2
+          },
+          {
+            "type": "Chirp (LFM)",
+            "power_dBm": -30.7,
+            "power_mW": 0.000851,
+            "energy_J": "1.39e-09",
+            "energy_dBJ": -88.6
+          },
+          {
+            "type": "BPSK",
+            "power_dBm": -36.2,
+            "power_mW": 0.000238,
+            "energy_J": "3.90e-10",
+            "energy_dBJ": -94.1
+          }
+        ],
+        "digital_signal": {
+          "type": "16QAM",
+          "total_bits": 1638,
+          "Eb_J": "4.57e-13",
+          "Eb_dBJ": -123.4
+        },
+        "total_signal_power_mW": 0.002135,
+        "noise_power_mW": 8e-06,
+        "total_received_power_mW": 0.002143,
+        "total_received_power_dBm": -26.7,
+        "power_addition_explanation": "dBm is a logarithmic unit, and logarithmic functions do not satisfy linear superposition: 10log₁₀(P₁+P₂) ≠ 10log₁₀(P₁) + 10log₁₀(P₂). Each dBm value must first be converted to mW (P_mW = 10^(P_dBm/10)), summed in the linear domain, then converted back to dBm: P_total_dBm = 10log₁₀(ΣP_i_mW)."
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l2-deterministic-v4",
+        "energy": {
+          "pts": 5,
+          "tol": "±1 order of magnitude",
+          "note": "correct mW→W conversion and E=P×T"
+        },
+        "Eb": {
+          "pts": 5,
+          "tol": "±3dB",
+          "note": "correct total bits count and Eb=Es/Nbits"
+        },
+        "total_power": {
+          "pts": 5,
+          "tol": "±2dB",
+          "note": "sum in mW then convert to dBm"
+        },
+        "explanation": {
+          "pts": 5,
+          "note": "Must explain that values in the logarithmic domain cannot be directly summed; provide the correct formula"
+        }
+      }
+    }
+  ],
+  "generation_params": {
+    "fs": 20000000.0,
+    "N": 32768,
+    "duration_ms": 1.6384,
+    "signals": [
+      {
+        "type": "16QAM",
+        "center_frequency_MHz": -1.32705612899314,
+        "symbol_rate_kHz": 250.0,
+        "rolloff": 0.3,
+        "M": 16,
+        "bits_per_symbol": 4,
+        "power_dBm": -33.4,
+        "bandwidth_MHz": 0.325,
+        "is_burst": false
+      },
+      {
+        "type": "FM",
+        "center_frequency_MHz": -5.872321598842644,
+        "frequency_deviation_kHz": 200.86800173192373,
+        "modulating_frequency_kHz": 10.986328125,
+        "max_modulating_freq_kHz": 11.0,
+        "modulation_index": 18.28,
+        "carson_bandwidth_kHz": 423.7,
+        "power_dBm": -32.3,
+        "bandwidth_MHz": 0.424,
+        "is_burst": false
+      },
+      {
+        "type": "Chirp (LFM)",
+        "center_frequency_MHz": 5.946154467614728,
+        "sweep_start_MHz": 4.467019200428574,
+        "sweep_end_MHz": 7.425289734800883,
+        "bandwidth_MHz": 2.9582705343723092,
+        "chirp_rate_MHz_per_ms": 1.81,
+        "time_bandwidth_product": 4846.8,
+        "processing_gain_dB": 36.9,
+        "range_resolution_m": 50.71,
+        "power_dBm": -30.7,
+        "is_burst": false
+      },
+      {
+        "type": "BPSK",
+        "center_frequency_MHz": 1.4511046028211159,
+        "symbol_rate_kHz": 450.0,
+        "rolloff": 0.3,
+        "M": 2,
+        "bits_per_symbol": 1,
+        "power_dBm": -32.6,
+        "bandwidth_MHz": 0.585,
+        "is_burst": true,
+        "burst_info": {
+          "active_window": "24%-69%",
+          "duty_cycle": 0.45,
+          "snr_loss_dB": -3.5
+        }
+      }
+    ],
+    "noise_floor_dBm": -51.0,
+    "seed": 106009,
+    "slot_seed": 6009,
+    "q3_attempt": 1
+  }
+}

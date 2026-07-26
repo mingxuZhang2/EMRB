@@ -1,0 +1,213 @@
+{
+  "sample_id": "EMRB_L4_1018",
+  "level": "L4",
+  "archetype": "D_ofdm_centric",
+  "archetype_desc": "OFDM + narrowband interferers",
+  "total_points": 100,
+  "question": "You are an electromagnetic signal analysis expert. Below is I/Q signal data collected from a complex electromagnetic environment.\n\nSignal file: EMRB_L4_1018.npy\nSample rate: 20 MHz\nNumber of samples: 32768\nData format: complex64 (numpy)\nRecording duration: 1.6384 ms\n\nMultiple independent signal sources exist within this frequency band (spectral overlap and burst signals may be present).\nPlease first analyze the signal environment on your own, then answer the following questions:\n\nQ1. There is a digitally modulated signal near -5.2 MHz. Please estimate its symbol rate (ksym/s) and modulation order.\n\nQ2. For the FM signal near +5.8 MHz, please estimate: (a) frequency deviation (kHz), (b) maximum modulating frequency (kHz), (c) modulation index beta, (d) verify whether the observed bandwidth is consistent with Carson's rule.\n\nQ3. Analyze the spectral environment comprehensively: if deploying a new 64QAM communication link in the -5.00~+0.78 MHz spectral gap (rolloff=0.2), (a) what is the maximum available contiguous bandwidth in MHz? (b) what is the maximum achievable data rate in kbps? (c) under the current noise environment (noise floor approx. -50 dBm/20MHz), what minimum received signal power in the link bandwidth is required to meet the minimum SNR for 64QAM (23 dB)?\n\nQ4. There is an OFDM signal near +1.8 MHz. Please estimate: (a) subcarrier spacing (kHz), (b) CP duration (us), (c) effective occupied bandwidth (MHz), (d) the useful OFDM symbol duration excluding the CP (us).\n\nQ5. For the BPSK signal at -5.2 MHz, given a noise floor of -50 dBm/20MHz: (a) estimate the SNR (dB) of this signal within its occupied bandwidth. (b) According to the Shannon formula, what is the theoretical channel capacity upper bound in Mbps? (c) How far is the current modulation scheme's spectral efficiency (1 bits/symbol) from the Shannon limit?\n\nPlease provide a complete reasoning process and numerical results for each question.",
+  "questions": [
+    {
+      "id": "Q1",
+      "question_type": "QT01",
+      "question": "There is a digitally modulated signal near -5.2 MHz. Please estimate its symbol rate (ksym/s) and modulation order.",
+      "ground_truth": {
+        "symbol_rate_ksps": 250.0,
+        "type": "BPSK",
+        "M": 2,
+        "center_frequency_MHz": -5.17154699943213
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "symbol_rate": {
+          "pts": 10,
+          "tolerance": "±15%",
+          "answer": 250.0
+        },
+        "mod_order": {
+          "pts": 10,
+          "answer": "BPSK"
+        }
+      }
+    },
+    {
+      "id": "Q2",
+      "question_type": "QT02",
+      "question": "For the FM signal near +5.8 MHz, please estimate: (a) frequency deviation (kHz), (b) maximum modulating frequency (kHz), (c) modulation index beta, (d) verify whether the observed bandwidth is consistent with Carson's rule.",
+      "ground_truth": {
+        "frequency_deviation_kHz": 260.1571025760892,
+        "max_modulating_freq_kHz": 16.6,
+        "modulation_index": 15.65,
+        "modulation_index_accepted": [
+          15.65,
+          15.67
+        ],
+        "carson_bandwidth_kHz": 553.6,
+        "carson_bandwidth_accepted_kHz": [
+          553.5,
+          553.6
+        ]
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "deviation": {
+          "pts": 6,
+          "tolerance": "±20%"
+        },
+        "mod_freq": {
+          "pts": 5,
+          "tolerance": "±30%"
+        },
+        "mod_index": {
+          "pts": 4,
+          "tolerance": "±30%"
+        },
+        "carson_value": {
+          "pts": 3,
+          "tolerance": "±20%"
+        },
+        "carson_verdict": {
+          "pts": 2,
+          "note": "observed bandwidth is consistent with Carson by construction"
+        }
+      }
+    },
+    {
+      "id": "Q3",
+      "question_type": "QT05",
+      "question": "Analyze the spectral environment comprehensively: if deploying a new 64QAM communication link in the -5.00~+0.78 MHz spectral gap (rolloff=0.2), (a) what is the maximum available contiguous bandwidth in MHz? (b) what is the maximum achievable data rate in kbps? (c) under the current noise environment (noise floor approx. -50 dBm/20MHz), what minimum received signal power in the link bandwidth is required to meet the minimum SNR for 64QAM (23 dB)?",
+      "ground_truth": {
+        "available_gap_MHz": 5.776,
+        "symbol_rate_ksps": 4813.5,
+        "data_rate_kbps": 28880.8,
+        "required_power_dBm": -32.4
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "bandwidth": {
+          "pts": 6,
+          "tolerance": "±0.05MHz"
+        },
+        "data_rate": {
+          "pts": 7,
+          "tolerance": "±20%"
+        },
+        "power": {
+          "pts": 7,
+          "tolerance": "±3dB"
+        }
+      }
+    },
+    {
+      "id": "Q4",
+      "question_type": "QT06",
+      "question": "There is an OFDM signal near +1.8 MHz. Please estimate: (a) subcarrier spacing (kHz), (b) CP duration (us), (c) effective occupied bandwidth (MHz), (d) the useful OFDM symbol duration excluding the CP (us).",
+      "ground_truth": {
+        "subcarrier_spacing_kHz": 15.625,
+        "cp_duration_us": 32.0,
+        "occupied_bandwidth_MHz": 2.0,
+        "symbol_duration_us": 64.0
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "sc_spacing": {
+          "pts": 6,
+          "tolerance": "±20%"
+        },
+        "cp_duration": {
+          "pts": 5,
+          "tolerance": "±30%"
+        },
+        "occupied_bw": {
+          "pts": 5,
+          "tolerance": "±20%"
+        },
+        "sym_duration": {
+          "pts": 4,
+          "tolerance": "±20%"
+        }
+      }
+    },
+    {
+      "id": "Q5",
+      "question_type": "QT10",
+      "question": "For the BPSK signal at -5.2 MHz, given a noise floor of -50 dBm/20MHz: (a) estimate the SNR (dB) of this signal within its occupied bandwidth. (b) According to the Shannon formula, what is the theoretical channel capacity upper bound in Mbps? (c) How far is the current modulation scheme's spectral efficiency (1 bits/symbol) from the Shannon limit?",
+      "ground_truth": {
+        "snr_dB": 30.5,
+        "shannon_capacity_Mbps": 3.54,
+        "spectral_efficiency_gap": 9.41,
+        "accepted_conventions": [
+          {
+            "snr_dB": 30.5,
+            "shannon_capacity_Mbps": 3.54,
+            "spectral_efficiency_gap": [
+              9.12,
+              9.41
+            ]
+          }
+        ]
+      },
+      "rubric": {
+        "points": 20,
+        "scoring": "l4-generic-v3",
+        "snr": {
+          "pts": 6,
+          "tolerance": "±3dB"
+        },
+        "capacity": {
+          "pts": 8,
+          "tolerance": "±20%"
+        },
+        "gap_analysis": {
+          "pts": 6,
+          "note": "Correctly computes the gap between current efficiency and the Shannon limit"
+        }
+      }
+    }
+  ],
+  "generation_params": {
+    "fs": 20000000.0,
+    "N": 32768,
+    "duration_ms": 1.6384,
+    "signals": [
+      {
+        "type": "OFDM",
+        "center_frequency_MHz": 1.7796107228759286,
+        "n_subcarriers": "128",
+        "subcarrier_spacing_kHz": 15.625,
+        "cp_ratio": 0.5,
+        "cp_duration_us": 32.0,
+        "symbol_duration_us": 64.0,
+        "occupied_bandwidth_MHz": 2.0,
+        "power_dBm": -28.8,
+        "bandwidth_MHz": 2.0
+      },
+      {
+        "type": "FM",
+        "center_frequency_MHz": 5.789583756303901,
+        "frequency_deviation_kHz": 260.1571025760892,
+        "modulating_frequency_kHz": 16.621257651192735,
+        "max_modulating_freq_kHz": 16.6,
+        "modulation_index": 15.65,
+        "carson_bandwidth_kHz": 553.6,
+        "power_dBm": -31.3,
+        "bandwidth_MHz": 0.554
+      },
+      {
+        "type": "BPSK",
+        "center_frequency_MHz": -5.17154699943213,
+        "symbol_rate_kHz": 250.0,
+        "rolloff": 0.4,
+        "M": 2,
+        "bits_per_symbol": 1,
+        "power_dBm": -37.1,
+        "bandwidth_MHz": 0.35
+      }
+    ],
+    "noise_floor_dBm": "-50",
+    "seed": 1018
+  }
+}
