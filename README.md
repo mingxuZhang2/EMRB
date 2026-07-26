@@ -63,6 +63,14 @@ Scores range from **24.1%** (Llama 3.3 70B) to **78.8%** (GPT-5.5) across 15 LLM
 
 EMRB includes **ReconPilot**, a structured 3-stage pipeline that separates signal reconnaissance from targeted analysis:
 
+<div align="center">
+<img src="assets/fig_reconpilot.png" width="85%"/>
+<br/>
+<sub><b>Figure 6.</b> ReconPilot pipeline: fixed reconnaissance produces an unresolved spectral region map, which guides a free-form analysis loop, followed by deterministic self-verification.</sub>
+</div>
+
+<br/>
+
 | Stage | What it does | Turns |
 |:-----:|--------------|:-----:|
 | **Stage 1: Reconnaissance** | Fixed code template localizes occupied spectral regions and flags time/frequency behavior. Produces an unresolved region map (not a signal catalog). | 1 |
@@ -84,7 +92,7 @@ Each problem provides a raw I/Q capture as a `.npy` file. The model must discove
 <div align="center">
 <img src="assets/fig_signal_psd.png" width="50%"/>
 <br/>
-<sub><b>Figure 6.</b> Example PSD of an L4 multi-signal scenario with 4 signals above the noise floor.</sub>
+<sub><b>Figure 7.</b> Example PSD of an L4 multi-signal scenario with 4 signals above the noise floor.</sub>
 </div>
 
 <br/>
