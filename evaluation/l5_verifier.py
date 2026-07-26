@@ -7,7 +7,7 @@ import re
 import numpy as np
 from scipy.optimize import linear_sum_assignment
 
-from generate_l5_batch import (
+from generation.generate_l5_batch import (
     MASK_TARGET_RETENTION,
     MODULATION_MARGIN_DB,
     MODULATION_OPTIONS,

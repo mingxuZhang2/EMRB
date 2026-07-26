@@ -113,11 +113,11 @@ Each problem provides a raw I/Q capture as a `.npy` file. The model must discove
 Pre-generated data is in `data/`. To regenerate (deterministic, seeded):
 
 ```bash
-python generate_l1_batch.py    # -> data/L1/  (40 problems)
-python generate_l2_batch.py    # -> data/L2/
-python generate_l3_batch.py    # -> data/L3/
-python generate_l4_batch.py    # -> data/L4/
-python generate_l5_batch.py    # -> data/L5/
+python generate.py --level L1    # -> data/L1/  (40 problems)
+python generate.py --level L2    # -> data/L2/
+python generate.py --level L3    # -> data/L3/
+python generate.py --level L4    # -> data/L4/
+python generate.py --level L5    # -> data/L5/
 ```
 
 ## Quick Start
@@ -192,10 +192,8 @@ EMRB/
 ├── LICENSE                    # MIT (code)
 ├── LICENSE-DATA               # CC BY 4.0 (benchmark data)
 ├── requirements.txt
-├── signal_library.py          # 11 signal generators
-├── question_library.py        # L4 question templates
-├── generate_l{1-5}_batch.py   # Problem generators for each level
 ├── evaluate.py                # Evaluation CLI
+├── generate.py                # Problem generation CLI
 ├── evaluation/
 │   ├── config.py              # Model/API configuration
 │   ├── runner.py              # Free-form agent loop
@@ -203,6 +201,10 @@ EMRB/
 │   ├── executor.py            # Sandboxed Python execution
 │   ├── l{1-5}_verifier.py     # Deterministic scorers per level
 │   └── auto_scorer.py         # Answer parsing utilities
+├── generation/
+│   ├── signal_library.py      # 11 signal generators
+│   ├── question_library.py    # L4 question templates
+│   └── generate_l{1-5}_batch.py  # Per-level problem generators
 ├── data/
 │   ├── L1/                    # 40 problems (.json + .npy)
 │   ├── L2/

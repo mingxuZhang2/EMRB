@@ -12,7 +12,7 @@ import numpy as np
 import json
 import os
 
-from signal_library import SIGNAL_GENERATORS, apply_burst
+from generation.signal_library import SIGNAL_GENERATORS, apply_burst
 
 # Public task constants used by the deterministic verifier. The prompt exposes
 # only the physical assumptions and engineering constraints needed to define

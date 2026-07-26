@@ -13,7 +13,7 @@ import numpy as np
 import json
 import os
 
-from signal_library import SIGNAL_GENERATORS
+from generation.signal_library import SIGNAL_GENERATORS
 
 # Required Eb/N0 (dB) for BER = 1e-5, theoretical AWGN
 EBN0_REQ = {'BPSK': 9.6, 'QPSK': 9.6, '8PSK': 13.0, '16QAM': 12.6, '64QAM': 16.5}

@@ -15,7 +15,7 @@ import os
 
 from scipy.signal import welch
 
-from signal_library import SIGNAL_GENERATORS
+from generation.signal_library import SIGNAL_GENERATORS
 
 # Marker consumed by evaluation/l1_verifier.py via rubric['scoring'];
 # single-sourced so the stamped marker can never drift from the scorer.

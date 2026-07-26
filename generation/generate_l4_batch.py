@@ -9,8 +9,8 @@ import json
 import os
 import sys
 
-from signal_library import SIGNAL_GENERATORS, apply_burst, _set_power
-from question_library import QUESTION_GENERATORS
+from generation.signal_library import SIGNAL_GENERATORS, apply_burst, _set_power
+from generation.question_library import QUESTION_GENERATORS
 
 
 REPAIRED_ANSWER_SCHEMA = 'emrb-l4-repaired-v1'

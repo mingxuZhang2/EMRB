@@ -15,7 +15,7 @@ import os
 
 from scipy.signal import find_peaks
 
-from signal_library import SIGNAL_GENERATORS, apply_burst
+from generation.signal_library import SIGNAL_GENERATORS, apply_burst
 
 # Q3 (autocorrelation) answer-format marker and oracle constants. The oracle
 # accepts a scenario only if the received signal's |R(tau)| comb is unambiguous

@@ -7,9 +7,8 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-import generate_l1_batch
-import generate_l2_batch
-from signal_library import SIGNAL_GENERATORS, apply_burst
+from generation import generate_l1_batch, generate_l2_batch
+from generation.signal_library import SIGNAL_GENERATORS, apply_burst
 
 
 DIGITAL_TYPES = {'BPSK', 'QPSK', '8PSK', '16QAM', '64QAM'}
