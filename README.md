@@ -9,7 +9,7 @@
 [![License: MIT](https://img.shields.io/badge/Code-MIT-blue.svg)](LICENSE)
 [![License: CC BY 4.0](https://img.shields.io/badge/Data-CC%20BY%204.0-green.svg)](LICENSE-DATA)
 [![Problems](https://img.shields.io/badge/Problems-200-orange.svg)]()
-[![Models](https://img.shields.io/badge/Models%20Evaluated-15-purple.svg)]()
+[![Models](https://img.shields.io/badge/Models%20Evaluated-14-purple.svg)]()
 
 [Dataset](#benchmark-data) | [Leaderboard](#leaderboard) | [ReconPilot](#reconpilot) | [Quick Start](#quick-start)
 
@@ -27,12 +27,12 @@ Unlike benchmarks built on preprocessed features or structured tables, **EMRB** 
 
 ## Leaderboard
 
-Scores range from **24.1%** (Llama 3.3 70B) to **78.8%** (GPT-5.5) across 15 LLMs, with no ceiling effect.
+Scores range from **24.1%** (Llama 3.3 70B) to **78.9%** (GPT-5.5) across 14 LLMs, with no ceiling effect.
 
 <div align="center">
 <img src="assets/fig_main_results.png" width="95%"/>
 <br/>
-<sub><b>Figure 2.</b> (a) Overall EMRB scores across 15 LLMs. (b) Efficiency frontier: accuracy vs. average code calls per problem.</sub>
+<sub><b>Figure 2.</b> (a) Overall EMRB scores across 14 LLMs. (b) Efficiency frontier: accuracy vs. average code calls per problem.</sub>
 </div>
 
 <br/>
@@ -40,7 +40,7 @@ Scores range from **24.1%** (Llama 3.3 70B) to **78.8%** (GPT-5.5) across 15 LLM
 <div align="center">
 <img src="assets/fig_heatmap.png" width="90%"/>
 <br/>
-<sub><b>Figure 3.</b> Per-level scores (%) for all 15 models. The mean drops from 84.9% on L1 (basic measurement) to 21.2% on L5 (system design).</sub>
+<sub><b>Figure 3.</b> Per-level scores (%) for all 14 models. The mean drops from 84.9% on L1 (basic measurement) to 21.2% on L5 (system design).</sub>
 </div>
 
 <br/>
