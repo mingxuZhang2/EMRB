@@ -6,12 +6,13 @@
 
 *Submitted to KDD 2027 Datasets & Benchmarks Track*
 
+[![arXiv](https://img.shields.io/badge/arXiv-2608.24086-b31b1b.svg)](https://arxiv.org/abs/2608.24086)
 [![License: MIT](https://img.shields.io/badge/Code-MIT-blue.svg)](LICENSE)
 [![License: CC BY 4.0](https://img.shields.io/badge/Data-CC%20BY%204.0-green.svg)](LICENSE-DATA)
 [![Problems](https://img.shields.io/badge/Problems-200-orange.svg)]()
 [![Models](https://img.shields.io/badge/Models%20Evaluated-14-purple.svg)]()
 
-[Dataset](#benchmark-data) | [Leaderboard](#leaderboard) | [ReconPilot](#reconpilot) | [Quick Start](#quick-start)
+[Paper](https://arxiv.org/abs/2608.24086) | [Dataset](#benchmark-data) | [Leaderboard](#leaderboard) | [ReconPilot](#reconpilot) | [Quick Start](#quick-start) | [Citation](#citation)
 
 </div>
 
@@ -213,6 +214,22 @@ EMRB/
 │   └── L5/
 ├── tests/                     # Verifier test suite
 └── assets/                    # Figures
+```
+
+## Citation
+
+If you use EMRB in your research, please cite:
+
+```bibtex
+@misc{zhang2026emrbmultilevelbenchmarkevaluating,
+      title={EMRB: A Multi-Level Benchmark for Evaluating LLM Reasoning over Raw Electromagnetic Signals},
+      author={Mingxu Zhang and Ying Sun and Yuhan Li and Yang Ji and Dazhong Shen and Ke Zhang and Shan Huang},
+      year={2026},
+      eprint={2608.24086},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2608.24086},
+}
 ```
 
 ## License
