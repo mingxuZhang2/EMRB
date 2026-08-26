@@ -4,3 +4,4 @@ __pycache__/
 eval_results/
 *.log
 .DS_Store
+hf_export/
