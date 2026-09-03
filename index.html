@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EMRB 电磁信号推理评测基准</title>
+<meta name="description" content="EMRB 基于程序化生成的可验证信号数据构建，采用原始 I/Q 波形加自主代码执行的评测形式，评估大语言模型对电磁信号的分析与推理水平。200 道题，5 个难度等级，27 类题型，14 个已评测模型。">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <span class="mark" aria-hidden="true"></span>
+    <span class="brand">SciHorizon</span>
+    <nav>
+      <a href="#" data-goto="panel-board">模型榜单</a>
+      <a href="#" data-goto="panel-arch">评估架构</a>
+      <a href="https://arxiv.org/abs/2608.24086" target="_blank" rel="noopener">论文</a>
+      <a href="https://github.com/mingxuZhang2/EMRB" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <h1>EMRB</h1>
+    <div class="sub-en">Electromagnetic Reasoning Benchmark</div>
+    <p class="lede">
+      科学地平线-电磁（EMRB）基于程序化生成的可验证信号数据构建，采用原始 I/Q 波形加自主代码执行的评测形式，
+      旨在评估大语言模型对电磁信号的分析与推理水平，其评测范围从信号检测、功率标定等基础测量延伸至多信号态势分析与频谱系统设计。
+    </p>
+    <span class="pill">合作共建：香港科技大学（广州）、国防科技大学第六十三研究所</span>
+    <div class="hero-links">
+      <a class="btn btn-primary" href="https://arxiv.org/abs/2608.24086" target="_blank" rel="noopener">阅读论文 arXiv:2608.24086</a>
+      <a class="btn btn-ghost" href="https://github.com/mingxuZhang2/EMRB" target="_blank" rel="noopener">数据与代码 GitHub</a>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="tabbar" role="tablist">
+    <button class="tab" role="tab" data-panel="panel-board" aria-selected="true">模型榜单</button>
+    <button class="tab" role="tab" data-panel="panel-arch" aria-selected="false">评估架构</button>
+  </div>
+</div>
+
+<main class="wrap">
+
+<!-- ============================ 模型榜单 ============================ -->
+<section id="panel-board" class="panel" role="tabpanel">
+
+  <div class="block">
+    <div id="stats" class="stat-row"></div>
+  </div>
+
+  <div class="block">
+    <div class="block-inner">
+      <h2 class="block-title">大语言模型电磁信号分析能力榜单</h2>
+      <p class="intro">
+        14 个模型的总体得分从 24.1 分到 78.9 分，跨度 54.8 分，没有任何模型达到 80 分，基准对当前最强系统而言仍未饱和。
+        跨模型平均分从 L1 的 84.9% 依次下降到 L2 的 72.3%、L3 的 68.7%、L4 的 53.1%、L5 的 21.2%。
+        表格默认按总体得分降序排列，点击任意表头可按该列重新排序，单元格颜色按得分率深浅编码。
+      </p>
+
+      <div class="table-tools">
+        <div class="seg" id="lb-mode">
+          <button data-mode="level" aria-pressed="true">精简榜　5 个能力层次</button>
+          <button data-mode="type" aria-pressed="false">完整榜　27 类题型</button>
+        </div>
+        <div class="legend">
+          <span>得分率 0</span><span class="bar" aria-hidden="true"></span><span>100</span>
+        </div>
+      </div>
+
+      <div class="table-scroll" id="lb"></div>
+      <noscript><p class="note">榜单表格由页面脚本渲染，请开启 JavaScript。完整数值同时保存在 <code>data.js</code> 中。</p></noscript>
+
+      <p class="note" style="margin-top:12px">
+        数值为该层次或该题型的得分率百分比。总体得分由未取整的分级成绩计算，因此可能与各列取整值的均值在末位存在差异。
+        L1、L2、L3、L5 的每道题都实例化本等级的全部题型，故每格平均 40 道题；L4 的每道题抽取 5 类题型，故每格平均 5 至 40 道题。
+      </p>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-inner">
+      <h2 class="block-title">总体表现与效率</h2>
+      <figure class="fig">
+        <img src="assets/fig_main_results.png" alt="14 个模型的 EMRB 总体得分条形图，以及准确率对每题代码调用次数的效率散点图">
+        <figcaption>
+          （a）14 个模型的 EMRB 总体得分。（b）效率前沿：准确率对每题平均代码调用次数。
+          更高的成绩并非来自执行更多代码：GPT-5.5 以每题 3.7 次代码调用达到 78.9%，Grok-4.5 以每题 12.6 次调用达到接近的 77.8%，
+          交互次数是前者的三倍以上，准确率却几乎相同。
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-inner">
+      <h2 class="block-title">能力剖面与题型分布</h2>
+      <div class="two-col">
+        <figure class="fig">
+          <img src="assets/fig_radar.png" alt="排名前六的模型在五个能力层次上的雷达图">
+          <figcaption>排名前六的模型在五个层次上的表现，没有任何模型在每一层次上都占优。</figcaption>
+        </figure>
+        <figure class="fig">
+          <img src="assets/fig_level_distribution.png" alt="五个能力层次上的模型得分分布箱线图">
+          <figcaption>五个层次上的得分分布。每个灰点是一个模型，黑线是中位数，橙色菱形是均值。</figcaption>
+        </figure>
+      </div>
+      <figure class="fig">
+        <img src="assets/fig_question_types.png" alt="27 类题型与 14 个模型的得分热力图">
+        <figcaption>27 类题型的细粒度分解，底行是跨模型均值。</figcaption>
+      </figure>
+      <p class="intro">
+        按题型看，最弱的三类正是 L5 的三类，跨模型均值分别为 25、23、15 分。
+        L4 中最弱的是香农容量（43 分），而它恰是该等级最标准的教科书公式，说明瓶颈在于从多辐射源场景中提取正确的带宽项与噪声项，而不在计算本身。
+        L1 中唯一的弱项是 dBm 绝对功率（67 分），其余四类在 81 至 96 分之间，这一弱点向上延续到 L2 的能量与功率谱（54 分），
+        可见经过标定的功率测量是最先失效的能力，并且在各个难度等级上持续失效。
+      </p>
+      <p class="intro">
+        这些剖面可以直接翻译为实用边界。最强的模型在工作流的早期阶段已经可靠，标定测量与教科书式链路计算的得分都在 85% 以上。
+        边界出现在多信号分析：一旦多个辐射源共享频谱，多数模型无法把每一项测量继续绑定在正确的辐射源上。
+        至于把一次拥挤频段的普查转化为系统设计，目前没有任何模型可以托付，最好成绩只有 39.8%。
+      </p>
+    </div>
+  </div>
+
+  <div class="block block--tint">
+    <div class="block-inner">
+      <h2 class="block-title">结构化分析方法 ReconPilot</h2>
+      <p class="intro">
+        ReconPilot 用两个固定阶段包裹住由大模型主导的定向分析：阶段一执行固定的信号侦察，输出一份未定解的频谱区域图而非信号清单；
+        阶段二是不加修改的自由代码执行回路；阶段三执行自我校验，在提交之前捕捉不一致。
+        在三个骨干模型上，ReconPilot 分别把总体得分提高 14.0 分、17.6 分与 3.8 分，并在 15 个「骨干 × 层次」组合中改善了 13 个。
+      </p>
+      <figure class="fig">
+        <img src="assets/fig_reconpilot.png" alt="ReconPilot 三阶段流程图">
+        <figcaption>ReconPilot 流程：固定侦察产生未定解的频谱区域图，引导自由分析回路，最后由确定性自我校验收尾。</figcaption>
+      </figure>
+      <table class="plain">
+        <thead>
+          <tr><th>骨干模型</th><th>方法</th><th>L1</th><th>L2</th><th>L3</th><th>L4</th><th>L5</th><th>总体得分</th></tr>
+        </thead>
+        <tbody>
+          <tr><th rowspan="2">DeepSeek V4 Flash</th><td>自由代码执行</td><td class="num">91.2</td><td class="num">65.1</td><td class="num">67.5</td><td class="num">41.8</td><td class="num">16.5</td><td class="num">56.4</td></tr>
+          <tr><td>ReconPilot</td><td class="num">88.2</td><td class="num">86.3</td><td class="num">84.9</td><td class="num">67.8</td><td class="num">24.8</td><td class="num hl">70.4</td></tr>
+          <tr><th rowspan="2">Gemini 3.5 Flash</th><td>自由代码执行</td><td class="num">91.9</td><td class="num">46.3</td><td class="num">72.6</td><td class="num">47.2</td><td class="num">28.3</td><td class="num">57.2</td></tr>
+          <tr><td>ReconPilot</td><td class="num">94.9</td><td class="num">89.2</td><td class="num">84.3</td><td class="num">72.2</td><td class="num">33.1</td><td class="num hl">74.8</td></tr>
+          <tr><th rowspan="2">GPT-5.5</th><td>自由代码执行</td><td class="num">95.8</td><td class="num">86.0</td><td class="num">93.2</td><td class="num">84.8</td><td class="num">34.5</td><td class="num">78.9</td></tr>
+          <tr><td>ReconPilot</td><td class="num">97.0</td><td class="num">87.7</td><td class="num">90.1</td><td class="num">90.5</td><td class="num">48.2</td><td class="num hl">82.7</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</section>
+
+<!-- ============================ 评估架构 ============================ -->
+<section id="panel-arch" class="panel" role="tabpanel" hidden>
+
+  <div class="block">
+    <div class="block-inner">
+      <h2 class="block-title">大语言模型电磁信号分析能力评估维度体系</h2>
+      <p class="intro">
+        原始 I/Q 采集不带任何结构信息。表格数据的变量由列名给出，代码生成的目标行为由题面给出，
+        而电磁工程问题所指的辐射源、载频、带宽、干扰关系，在模型把它们计算出来之前并不存在于输入之中，此后每一步结论都会继承这一发现步骤的误差。
+        结合这一特点，本评测基准系统考察大语言模型在以下五个层次上的表现。
+      </p>
+      <div class="cap-grid">
+        <div class="cap">
+          <div class="cap-head"><span class="cap-lv">L1</span><div class="cap-name">基础测量的<br>标定精度</div></div>
+          <div class="cap-body">评估模型在已知频段粗略图景的前提下，读取每个源的中心频率、功率、噪声基底与调制类型的数值可靠性，检验其能否把一份粗略先验转化为经过标定的测量结果。</div>
+        </div>
+        <div class="cap">
+          <div class="cap-head"><span class="cap-lv">L2</span><div class="cap-name">测量方法的<br>选择与论证</div></div>
+          <div class="cap-body">测试模型能否为具体问题选定正确的信号处理过程，而不只是执行某一个过程。仅带宽一词就可能指 3 dB 宽度、零点间宽度或占用功率宽度，三者需要三种不同的实现。</div>
+        </div>
+        <div class="cap">
+          <div class="cap-head"><span class="cap-lv">L3</span><div class="cap-name">测量到<br>系统量的解释</div></div>
+          <div class="cap-body">评估模型能否把测得的信号属性连接到比特率、Eb/N0、PAPR、ADC 量化与数字下变频等通信系统量，考察其是否在依赖关系链上保持自洽，而非孤立套用公式。</div>
+        </div>
+        <div class="cap">
+          <div class="cap-head"><span class="cap-lv">L4</span><div class="cap-name">多信号场景的<br>实体绑定</div></div>
+          <div class="cap-body">在含有 3 至 5 个辐射源的拥挤频谱中，评估模型能否先建立完整的信号清单，再把每一项测量持续绑定到正确的辐射源。一旦遗漏或合并了某个辐射源，误差会传播到下游的每一项测量。</div>
+        </div>
+        <div class="cap">
+          <div class="cap-head"><span class="cap-lv">L5</span><div class="cap-name">频谱态势到<br>系统设计的综合</div></div>
+          <div class="cap-body">分析模型能否贯穿频谱普查、波形恢复、共存分析与系统设计这一整条链路，揭示其是否具备在约束条件下作出可行工程决策、并对自己的设计作可行性自检的能力。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="block block--tint">
+    <div class="block-inner">
+      <h2 class="block-title">测评基准流程</h2>
+      <figure class="fig">
+        <img src="assets/fig_framework.png" alt="EMRB 基准总览图：原始 I/Q 输入、五个难度等级、代码执行评测">
+        <figcaption>
+          （A）每道题把一段原始 I/Q 采集与一个工程问题配对。（B）从基础测量到系统设计的五个难度等级，覆盖 27 类题型与 11 种信号类型。
+          （C）模型迭代地编写并执行 Python 代码，答案由完全确定性的验证器判分。
+        </figcaption>
+      </figure>
+      <p class="intro">
+        EMRB 测评基准基于程序化生成、参数已知、可独立复现的信号数据集，构建了一套覆盖信号合成、题目生成、代码执行评测与确定性判分的完整流程。
+        从参数化信号库 → 场景原型与随机种子 → 原始 I/Q 波形与题目 → 沙箱内的多轮代码执行 → 分级确定性验证器 → 五个层次的能力衡量，
+        形成一个覆盖面广、逻辑严谨、可完全复现的评测框架。
+      </p>
+      <div class="flow">
+        <div class="step">
+          <h4>一、程序化合成可验证的原始信号</h4>
+          <p>参数化信号库覆盖 11 种信号类型。每道题由「场景原型 + 随机种子」唯一确定，每级 8 个原型、5 个种子。载频、带宽、功率与信噪比按等级范围采样，叠加经过功率标定的 AWGN，标准答案直接来自生成参数。</p>
+        </div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="step">
+          <h4>二、多层次多维度的题目生成</h4>
+          <p>5 个难度等级、27 类题型、920 个子问题。L1 至 L4 各含 5 个子问题，每个 20 分；L5 含 3 个综合子问题，分值 34、33、33。同一段信号会因问题不同而需要不同的分析过程。</p>
+        </div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="step">
+          <h4>三、代码执行评测与确定性判分</h4>
+          <p>模型收到题面与原始 I/Q 文件路径，在沙箱化的 Python 工具中最多进行 15 轮交互，提交结构化答案。分级确定性验证器按实体绑定与功能性验收规则判分，全过程不含大模型裁判。</p>
+        </div>
+      </div>
+      <h3 class="sub-title">数据质量校验</h3>
+      <ul class="points">
+        <li><b>独立复现</b>：参考信号处理脚本从保存的文件重新测量全部答案，在 200 道题上与生成参数的一致性优于 1%。</li>
+        <li><b>实现容差</b>：每段波形确实实现了目标参数，功率误差在 ±0.5 dB 以内，信噪比误差在 ±1 dB 以内，带宽误差在 ±5% 以内。</li>
+        <li><b>覆盖度</b>：题型分布与信号类型分布均符合设计。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-inner">
+      <h2 class="block-title">评测题目组成</h2>
+      <p class="intro">
+        本评测基准围绕原始 I/Q 波形构建，涵盖五个模型能力评测层次，展开为 27 类互不重叠的题型，形成多层次综合评价体系。
+        L1、L2、L3、L5 的每道题都实例化本等级的全部题型，L4 的每道题从本等级的 9 类题型中抽取 5 类。
+        EMRB 的题面本身是英文，模型看到的就是下列原文。
+      </p>
+
+      <table class="plain">
+        <thead><tr><th>等级</th><th>主题</th><th>题型</th><th>辐射源数</th><th>子问题数</th></tr></thead>
+        <tbody>
+          <tr><th>L1</th><td>基础测量</td><td>信号检测、功率测量、采样参数、噪声基底、调制识别</td><td class="num">2–3</td><td class="num">5</td></tr>
+          <tr><th>L2</th><td>信号处理方法论</td><td>FFT 与窗函数、带宽定义、自相关、STFT、能量与功率谱</td><td class="num">3–4</td><td class="num">5</td></tr>
+          <tr><th>L3</th><td>通信理论</td><td>比特率与符号率、Eb/N0 与误码率、PAPR、ADC 量化、数字下变频</td><td class="num">3–4</td><td class="num">5</td></tr>
+          <tr><th>L4</th><td>多信号分析</td><td>符号率与调制阶数、FM 参数、AM 参数、chirp 与雷达参数、突发分析、频谱空隙链路预算、干扰与 SIR、OFDM 参数、香农容量（每题抽 5 类）</td><td class="num">3–5</td><td class="num">5</td></tr>
+          <tr><th>L5</th><td>系统设计</td><td>频谱普查、雷达与通信共存、OFDM 系统设计</td><td class="num">6–7</td><td class="num">3</td></tr>
+        </tbody>
+      </table>
+
+      <div class="qa-node">
+        <h4>L1　基础测量的标定精度</h4>
+        <div class="qa">
+          <div class="qa-type">信号检测</div>
+          <p class="qa-q">Observe the spectrum of this frequency band and answer the following questions:
+    (a) How many distinct independent signals are present in this band?
+    (b) Estimate the center frequency (MHz) of each signal, listed from lowest to highest.
+    (c) Which signal has the strongest power? Which has the weakest? (Identify by center frequency)
+    (d) What is the power difference in dB between the strongest and weakest signals?</p>
+          <div class="qa-a"><b>答案：</b>信号数 3；中心频率 −7.41、−5.83、+3.46 MHz；最强 +3.46 MHz，最弱 −5.83 MHz；功率差 3.2 dB</div>
+        </div>
+        <div class="qa">
+          <div class="qa-type">绝对功率 dBm</div>
+          <p class="qa-q">Power measurement and dB conversion:
+    (a) Estimate the power (dBm) of each signal.
+    (b) Convert the power of each signal from dBm to mW.
+    (c) Calculate the total power of all signals (dBm).
+    (d) Given a noise floor of −53.0 dBm/20 MHz, calculate the SNR (dB) of each signal within its respective bandwidth.</p>
+          <div class="qa-a"><b>答案：</b>各信号功率 −29.8、−33.0、−30.8 dBm；总功率 −26.4 dBm；各信号 SNR 41.1、35.5、30.1 dB</div>
+        </div>
+      </div>
+
+      <div class="qa-node">
+        <h4>L2　测量方法的选择与论证</h4>
+        <div class="qa">
+          <div class="qa-type">FFT 与加窗</div>
+          <p class="qa-q">Spectral analysis parameters &amp; windowing:
+    (a) Given fs = 20 MHz and N = 32768, compute the current FFT frequency resolution Δf = fs/N (Hz).
+    (b) Rectangular window vs Hamming window: how does the main lobe width change? How does the sidelobe
+        level change? For multi-signal analysis in this band, which window function is more suitable?
+        Explain your reasoning.</p>
+          <div class="qa-a"><b>答案：</b>Δf = 610.35 Hz；推荐 Hamming 窗，理由是旁瓣由 −13 dB 降至 −42 dB，抑制强信号向弱信号的频谱泄漏，代价是主瓣由 1×Δf 展宽至 1.81×Δf</div>
+        </div>
+        <div class="qa">
+          <div class="qa-type">带宽定义</div>
+          <p class="qa-q">For the QPSK signal at +2.4 MHz (Rs ≈ 250 ksps, roll-off α = 0.3):
+    (a) Estimate its 3 dB bandwidth (Hz).
+    (b) Estimate its 99% power bandwidth (Hz).
+    (c) Estimate its null-to-null bandwidth (Hz).
+    (d) Why do these three bandwidth definitions yield different values? For frequency planning,
+        which definition is most appropriate? Why?</p>
+          <div class="qa-a"><b>答案：</b>3 dB 带宽 250 kHz，99% 功率带宽 325 kHz，零点间带宽 325 kHz；频率规划应采用 99% 功率带宽</div>
+        </div>
+      </div>
+
+      <div class="qa-node">
+        <h4>L3　测量到系统量的解释</h4>
+        <div class="qa">
+          <div class="qa-type">比特率与符号率</div>
+          <p class="qa-q">For the digitally modulated signal at +1.3 MHz:
+    (a) Identify its modulation scheme and estimate the symbol rate Rs (ksps).
+    (b) Calculate the raw bitrate Rb = Rs × log₂(M) (kbps).
+    (c) Calculate the spectral efficiency η = Rb / BW (bps/Hz).
+    (d) If the same symbol rate were used with 64QAM instead, what bitrate (kbps) could be achieved?</p>
+          <div class="qa-a"><b>答案：</b>QPSK，Rs = 500 ksps，Rb = 1000 kbps，η = 1.481 bps/Hz，改用 64QAM 后 Rb = 3000 kbps</div>
+        </div>
+        <div class="qa">
+          <div class="qa-type">PAPR 与功放回退</div>
+          <p class="qa-q">(a) Estimate the PAPR (dB) for each signal.
+(b) If these signals were to pass through the same power amplifier, which signal is best suited for a
+    nonlinear PA? Which is least suited? Why?
+(c) Assume P1dB = −22 dBm. For the digital signal at +1.3 MHz (average power ≈ −33.3 dBm), calculate
+    whether its peak power exceeds P1dB.
+(d) Calculate the input back-off (IBO = P1dB − P_avg) (dB) and explain how the back-off affects PA efficiency.</p>
+          <div class="qa-a"><b>答案：</b>QPSK 的 PAPR 为 5.0 dB，FM 与 Chirp 均为 0.0 dB；最适合非线性功放的是恒包络的 FM 与 Chirp，判分时两者都接受，最不适合的是 QPSK</div>
+        </div>
+      </div>
+
+      <div class="qa-node">
+        <h4>L4　多信号场景的实体绑定</h4>
+        <div class="qa">
+          <div class="qa-type">符号率与调制阶数</div>
+          <p class="qa-q">There are two digitally modulated signals in the −0.3 to +2.7 MHz region. Please estimate their symbol
+rates (ksym/s) and modulation orders respectively, and explain how you distinguished between the two signals.</p>
+          <div class="qa-a"><b>答案：</b>信号 1 为 QPSK，中心 +0.67 MHz，350 ksps，M = 4；信号 2 为 8PSK，中心 +1.69 MHz，150 ksps，M = 8</div>
+        </div>
+        <div class="qa">
+          <div class="qa-type">chirp 与雷达</div>
+          <p class="qa-q">There is a linear frequency modulated (Chirp) signal in the +5 to +8 MHz range. Please calculate:
+(a) time-bandwidth product (TBP), (b) processing gain after matched filtering (dB), (c) if this chirp is
+used for radar ranging, what is the corresponding range resolution in meters?</p>
+          <div class="qa-a"><b>答案：</b>TBP = 5550.8；匹配滤波处理增益 37.4 dB；距离分辨率 44.27 m</div>
+        </div>
+      </div>
+
+      <div class="qa-node">
+        <h4>L5　频谱态势到系统设计的综合</h4>
+        <div class="qa">
+          <div class="qa-type">频谱普查</div>
+          <p class="qa-q">Question 1: Comprehensive Spectrum Situational Awareness and Interference Mitigation (34 pts)
+(a) Identify all independent signal sources in the band (including possible low-power or burst signals),
+    and provide for each signal: center frequency (MHz), occupied bandwidth (MHz), modulation type,
+    estimated power (dBm). For a burst signal, report its power during the active interval rather than
+    its average over the full recording. Do not miss any signals. (12 pts)
+(b) Find the pair of non-chirp signals with the largest occupied-band overlap. Calculate their overlap
+    bandwidth (MHz) and SIR (dB), using the weaker signal as the target. (8 pts)
+(c) Design one contiguous spectral extraction filter ... (14 pts)</p>
+          <div class="qa-a"><b>答案（Q1a 部分）：</b>本题共 6 个辐射源，依次为 QPSK（+1.73 MHz，0.688 MHz，−30.1 dBm）、16QAM（+2.16 MHz，0.625 MHz，−34.5 dBm）、Chirp LFM（+6.11 MHz，3.605 MHz，−27.7 dBm）、BPSK（+5.84 MHz，0.390 MHz，−38.3 dBm）、FM（−7.04 MHz，0.820 MHz，−35.7 dBm）、突发 QPSK（−9.29 MHz，0.375 MHz，活动区间内 −41.3 dBm）</div>
+        </div>
+      </div>
+
+      <figure class="fig">
+        <img src="assets/fig_signal_psd.png" alt="一段 L4 多信号场景的功率谱示例，噪声基底之上有四个信号">
+        <figcaption>一段 L4 多信号场景的功率谱示例，噪声基底之上有四个信号。模型收到的是波形本身，不是这幅图。</figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <div class="block block--tint">
+    <div class="block-inner">
+      <h2 class="block-title">确定性评分与分数上限的有效性</h2>
+      <p class="intro">
+        建立在真实物理测量之上的基准，其评分必须同时具备精确性与可复现性。EMRB 通过分级的确定性验证器实现这一点，报告分数中没有任何大模型裁判参与。
+      </p>
+      <ol class="points">
+        <li><b>实体绑定</b>：验证器把抽取出的每一个数值先与其子问题标签、物理单位、信号身份完成匹配，然后才施加针对该物理量的容差，因此回答中其他位置出现的无关数字不可能得分。</li>
+        <li><b>功能性验收</b>：L4 与 L5 的综合答案，例如频谱提取通带、信道排布方案、OFDM 设计参数，按照显式的物理与设计约束验收，而不是与某一个参考字符串比对，从而在保持客观性的同时容纳多种有效设计。</li>
+        <li><b>前置条件门控</b>：L5 的下游子部分只有在其上游前置条件满足时才得分，例如重叠分析以正确的信号对识别为前提。把一个自信的设计施加于错误的对象，比不作答更糟。</li>
+        <li><b>版本与溯源指纹</b>：每条结果都随存验证器版本号与任务溯源指纹，只要题目、波形或评分规则发生变化，过期分数在生成图表与聚合结果时会被自动拒绝。</li>
+      </ol>
+
+      <h3 class="sub-title">分数上限是可以达到的</h3>
+      <table class="plain">
+        <thead><tr><th>等级</th><th>标准答案回放</th><th>14 模型并集</th><th>最佳单模型</th><th>程序化参考解</th></tr></thead>
+        <tbody>
+          <tr><th>L1</th><td class="num">100.0</td><td class="num">99.8</td><td class="num">95.8</td><td class="num">不适用</td></tr>
+          <tr><th>L2</th><td class="num">100.0</td><td class="num">99.4</td><td class="num">88.7</td><td class="num">不适用</td></tr>
+          <tr><th>L3</th><td class="num">100.0</td><td class="num">99.6</td><td class="num">93.2</td><td class="num">不适用</td></tr>
+          <tr><th>L4</th><td class="num">100.0</td><td class="num">98.8</td><td class="num">84.8</td><td class="num">不适用</td></tr>
+          <tr><th>L5</th><td class="num">100.0</td><td class="num">53.2</td><td class="num">39.8</td><td class="num hl">75.7</td></tr>
+        </tbody>
+      </table>
+      <p class="intro" style="margin-top:18px">
+        把每道题的参考值按模型被要求的答案格式渲染出来，再用同一套验证器打分，五个等级均得 100.0 分，说明评分规则处处可满足。
+        对每条判分标准保留 14 个模型中的最好结果，L1 至 L4 的并集覆盖 98.8% 至 99.8% 的可得分数。
+        L5 另有一份约 1000 行的经典 DSP 参考程序，只读取发布的波形与题面文字，不接触生成参数，得 75.7 分，接近最佳模型 39.8 分的两倍。
+        需要说明的是，该参考解是程序化的可达性基线，EMRB 目前没有人类专家基线。
+      </p>
+    </div>
+  </div>
+
+</section>
+
+</main>
+
+<div class="wrap">
+  <div class="paper-cta">
+    <h2>更多详情欢迎关注我们的论文</h2>
+    <a class="btn btn-primary" href="https://arxiv.org/abs/2608.24086" target="_blank" rel="noopener">点击链接跳转论文</a>
+  </div>
+</div>
+
+<footer class="site">
+  <div class="wrap">
+    <div>
+      <h5>EMRB 电磁信号推理评测基准</h5>
+      <p style="margin:0">合作共建：香港科技大学（广州）、国防科技大学第六十三研究所<br>
+      许可：数据 CC BY 4.0，代码 MIT</p>
+    </div>
+    <div>
+      <h5>相关链接</h5>
+      <p style="margin:0">
+        <a href="https://arxiv.org/abs/2608.24086" target="_blank" rel="noopener">论文 arXiv:2608.24086</a><br>
+        <a href="https://github.com/mingxuZhang2/EMRB" target="_blank" rel="noopener">数据与代码 GitHub</a>
+      </p>
+    </div>
+    <div class="bib-wrap">
+      <h5>引用本基准</h5>
+      <button class="copy" type="button">复制</button>
+      <pre class="bib">@misc{zhang2026emrbmultilevelbenchmarkevaluating,
+      title={EMRB: A Multi-Level Benchmark for Evaluating LLM Reasoning over Raw Electromagnetic Signals},
+      author={Mingxu Zhang and Ying Sun and Yuhan Li and Yang Ji and Dazhong Shen and Ke Zhang and Shan Huang},
+      year={2026},
+      eprint={2608.24086},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2608.24086},
+}</pre>
+    </div>
+    <div class="legal">
+      榜单数值取自论文正式结果表与经校验的评测结果加载器，随评测器版本与任务溯源指纹一并核对。
+    </div>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
