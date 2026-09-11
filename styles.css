@@ -86,9 +86,10 @@ a:hover { text-decoration: underline; }
 
 .hero {
   background:
-    radial-gradient(1100px 340px at 88% 18%, rgba(93, 160, 255, .30), transparent 62%),
+    radial-gradient(900px 420px at 80% 52%, rgba(93, 160, 255, .34), transparent 64%),
     linear-gradient(105deg, var(--navy-900) 0%, var(--navy-800) 52%, #17417f 100%);
   color: #fff;
+  min-height: 360px;
   padding: 52px 0 44px;
   position: relative;
   overflow: hidden;
@@ -103,7 +104,20 @@ a:hover { text-decoration: underline; }
   mask-image: linear-gradient(100deg, transparent 42%, #000 100%);
   pointer-events: none;
 }
-.hero .wrap { position: relative; z-index: 1; }
+/* 右侧插图：透明底 PNG 直接压在蓝色背景上，左缘用遮罩渐隐，避免硬边 */
+.hero-art {
+  position: absolute;
+  top: -10px; bottom: -10px; right: -18px;
+  width: min(740px, 55%);
+  z-index: 1;
+  background: url("assets/hero_em.png") no-repeat right center;
+  background-size: contain;
+  opacity: .96;
+  mask-image: linear-gradient(90deg, transparent 0%, #000 30%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 30%);
+  pointer-events: none;
+}
+.hero .wrap { position: relative; z-index: 2; }
 .hero h1 {
   margin: 0 0 4px;
   font-size: 40px;
@@ -111,7 +125,7 @@ a:hover { text-decoration: underline; }
   letter-spacing: .01em;
 }
 .hero .sub-en { color: #a9c8f5; font-size: 14px; letter-spacing: .06em; margin-bottom: 14px; }
-.hero p.lede { max-width: 780px; margin: 0 0 20px; font-size: 16px; color: #e2ecfb; }
+.hero p.lede { max-width: 680px; margin: 0 0 20px; font-size: 16px; color: #e2ecfb; }
 .pill {
   display: inline-block;
   background: rgba(120, 175, 255, .20);
@@ -415,6 +429,8 @@ footer.site a { color: #a9c8f5; }
 footer.site .legal { grid-column: 1 / -1; border-top: 1px solid rgba(255, 255, 255, .14); padding-top: 16px; color: #90a8cc; font-size: 12.5px; }
 
 @media (max-width: 1000px) {
+  /* 窄屏上插图退成低透明度的背景纹理，不与文字争位置 */
+  .hero-art { width: 74%; opacity: .34; }
   .cap-grid { grid-template-columns: repeat(2, 1fr); }
   .stat-row { grid-template-columns: repeat(3, 1fr); }
   .flow { grid-template-columns: 1fr; }
