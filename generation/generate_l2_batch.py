@@ -15,7 +15,8 @@ import os
 
 from scipy.signal import find_peaks
 
-from generation.signal_library import SIGNAL_GENERATORS, apply_burst
+from generation.signal_library import (SIGNAL_GENERATORS, apply_burst,
+                                       raised_cosine_occupied_bw_hz)
 
 # Q3 (autocorrelation) answer-format marker and oracle constants. The oracle
 # accepts a scenario only if the received signal's |R(tau)| comb is unambiguous
@@ -299,8 +300,11 @@ def qt_bandwidth_definitions(signals, fs, rng):
     # For raised-cosine pulse shaped signal:
     # 3dB BW ≈ Rs (the -3dB points span approximately Rs)
     bw_3db = Rs
-    # 99% power BW ≈ Rs × (1 + alpha)
-    bw_99 = Rs * (1 + alpha)
+    # 99% power BW of the generated waveform. The generators shape with a
+    # full raised cosine, so the PSD is |H_RC|^2 and holds 99% of its energy
+    # in about 1.03-1.05 x Rs; Rs(1+alpha) is the spectral support, not the
+    # 99% width (it overstates the GT by 18-22%).
+    bw_99 = raised_cosine_occupied_bw_hz(Rs, alpha, fs, 0.99)
     # Null-to-null BW = 2 × Rs for rectangular pulse, Rs × (1 + alpha) for raised cosine
     # For raised cosine: the spectrum goes to zero at f = ±Rs(1+α)/2 from center
     # So null-to-null (double-sided) = Rs × (1 + alpha)
@@ -323,7 +327,7 @@ def qt_bandwidth_definitions(signals, fs, rng):
         'bw_3dB_kHz': round(bw_3db / 1e3, 1),
         'bw_3dB_formula': '≈ Rs',
         'bw_99_kHz': round(bw_99 / 1e3, 1),
-        'bw_99_formula': '≈ Rs × (1 + α)',
+        'bw_99_formula': '99% energy width of the |H_RC(f)|^2 PSD of the generator taps (≈ 1.03-1.05 × Rs)',
         'bw_null_kHz': round(bw_null / 1e3, 1),
         'bw_null_formula': '≈ Rs × (1 + α) for raised cosine',
         'best_for_planning': '99% power bandwidth',
@@ -337,7 +341,7 @@ def qt_bandwidth_definitions(signals, fs, rng):
         'bw_3dB': {'pts': 5, 'tol': '±30%',
                    'note': '≈Rs, accept 0.5Rs~1.5Rs'},
         'bw_99': {'pts': 5, 'tol': '±25%',
-                  'note': '≈Rs(1+α)'},
+                  'note': '≈1.04Rs: 99% energy width of the |H_RC|^2 PSD'},
         'bw_null': {'pts': 5, 'tol': '±25%',
                     'note': '≈Rs(1+α) for raised cosine'},
         'explanation': {'pts': 5,

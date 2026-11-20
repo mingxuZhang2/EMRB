@@ -551,3 +551,15 @@ def test_l3_negated_efficiency_direction_earns_nothing():
     result = l3_verifier.score_l3_question(q3, asserted, signals)
     subs = {c['id']: c['score'] for c in result['sub_scores']}
     assert subs['ibo_efficiency_direction'] == 2.0
+
+
+def test_l3_qam_required_ebn0_matches_gray_coded_theory():
+    expected = {'BPSK': 9.6, 'QPSK': 9.6, '8PSK': 13.0, '16QAM': 13.4, '64QAM': 17.8}
+    seen = set()
+    for meta in _all_metadata(3):
+        q2 = next(q for q in meta['questions'] if q['id'] == 'Q2')['ground_truth']
+        types = {s['type'] for s in meta['generation_params']['signals'] if s['type'] in expected}
+        match = [t for t in types if expected[t] == q2['EbN0_required_dB']]
+        assert match, meta['sample_id']
+        seen.update(match)
+    assert {'16QAM', '64QAM'} <= seen

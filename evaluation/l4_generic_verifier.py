@@ -9,6 +9,7 @@ conventions carry accepted sets (multitone FM beta, burst-average SNR), and
 verdicts use negation-resolved polarity.
 """
 import math
+import re
 
 from evaluation.answer_parsing import (
     asserted_token,
@@ -25,7 +26,7 @@ from evaluation.answer_parsing import (
 )
 from evaluation.l1_verifier import part_text
 
-SCORER_VERSION = 'l4-generic-v3'
+SCORER_VERSION = 'l4-generic-v4'
 
 _DIGITAL_TYPES = ('BPSK', 'QPSK', '8PSK', '16QAM', '64QAM')
 
@@ -339,6 +340,33 @@ def _score_qt08(question, response):
 
 # --- QT10: Shannon capacity --------------------------------------------------
 
+_QT10_BITS_PER_SYMBOL = re.compile(
+    r'([-+]?\d+(?:\.\d+)?)\s*bits?\s*'
+    r'(?:/\s*sym(?:bol)?\b(?:\s*/\s*Hz\b)?|per\s+symbol\b)',
+    re.IGNORECASE)
+# a bits/symbol number counts as the gap only when the answer binds it to the
+# gap: "gap/difference/distance ... X", "X ... below/away/from the limit",
+# "X above the current", or X is the first number of (c) / follows "(c)".
+# Shannon-limit and current-modulation values stay unparsed (a 'bits' count).
+_QT10_GAP_BEFORE = re.compile(
+    r'(?:gap|difference|distance|差距|相差)'
+    r'(?:(?!current|achiev|uses|using)[^0-9]){0,30}$'
+    r'|(?:^|\()c\)\s*[^0-9]{0,30}$|^\s*$', re.IGNORECASE)
+_QT10_GAP_AFTER = re.compile(
+    r'^(?:-?equivalent)?\s*,?\s*(?:gap|below|away|short of|less than|'
+    r'lower than|under the|from (?:the )?(?:shannon|limit|theoretical)|'
+    r'above the current|低于|差距)', re.IGNORECASE)
+
+
+def _qt10_gap_text(text):
+    def bind(match):
+        before = text[max(0, match.start() - 60):match.start()]
+        after = text[match.end():match.end() + 40]
+        if _QT10_GAP_BEFORE.search(before) or _QT10_GAP_AFTER.search(after):
+            return f'{match.group(1)} bps/Hz'
+        return match.group(0)
+    return _QT10_BITS_PER_SYMBOL.sub(bind, text)
+
 
 def _score_qt10(question, response):
     gt = question['ground_truth']
@@ -350,7 +378,12 @@ def _score_qt10(question, response):
     }]
     text_a = part_text(response, qid, 'a')
     text_b = part_text(response, qid, 'b')
-    text_c = part_text(response, qid, 'c')
+    # the prompt itself calls bits/symbol the "spectral efficiency", so a gap
+    # written in bits/symbol is in the prompt's own unit; the shared parser
+    # would tokenize it as a 'bits' count and drop it. Normalized here only,
+    # and only for numbers bound to the gap, so no other question's parsing
+    # changes and a stated Shannon limit cannot stand in for the gap.
+    text_c = _qt10_gap_text(part_text(response, qid, 'c'))
     # score the whole answer against ONE self-consistent convention (active-
     # or average-power), never a per-field best-of across conventions
     best = None

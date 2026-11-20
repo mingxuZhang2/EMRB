@@ -38,7 +38,7 @@
         "64qam": {
           "pts": 3
         },
-        "scoring": "l3-deterministic-v5"
+        "scoring": "l3-deterministic-v6"
       }
     },
     {
@@ -68,7 +68,7 @@
           "pts": 5,
           "tol": "±3dB"
         },
-        "scoring": "l3-deterministic-v5"
+        "scoring": "l3-deterministic-v6"
       }
     },
     {
@@ -143,7 +143,7 @@
           "pts": 5,
           "note": "larger IBO means lower PA efficiency"
         },
-        "scoring": "l3-deterministic-v5"
+        "scoring": "l3-deterministic-v6"
       }
     },
     {
@@ -176,7 +176,7 @@
         "ENOB": {
           "pts": 6
         },
-        "scoring": "l3-deterministic-v5"
+        "scoring": "l3-deterministic-v6"
       }
     },
     {
@@ -205,7 +205,7 @@
         "reduction": {
           "pts": 5
         },
-        "scoring": "l3-deterministic-v5"
+        "scoring": "l3-deterministic-v6"
       }
     }
   ],

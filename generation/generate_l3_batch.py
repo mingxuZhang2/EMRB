@@ -15,8 +15,10 @@ import os
 
 from generation.signal_library import SIGNAL_GENERATORS
 
-# Required Eb/N0 (dB) for BER = 1e-5, theoretical AWGN
-EBN0_REQ = {'BPSK': 9.6, 'QPSK': 9.6, '8PSK': 13.0, '16QAM': 12.6, '64QAM': 16.5}
+# Required Eb/N0 (dB) for BER = 1e-5, uncoded coherent Gray-mapped AWGN:
+# BPSK/QPSK Q(sqrt(2g)) -> 9.59; 8PSK (2/3)Q(sqrt(6g) sin(pi/8)) -> 12.97;
+# M-QAM (4/k)(1-1/sqrt(M))Q(sqrt(3k g/(M-1))) -> 13.43 (16), 17.79 (64)
+EBN0_REQ = {'BPSK': 9.6, 'QPSK': 9.6, '8PSK': 13.0, '16QAM': 13.4, '64QAM': 17.8}
 
 # Marker consumed by evaluation/l3_verifier.py via rubric['scoring'];
 # single-sourced so the stamped marker can never drift from the scorer.

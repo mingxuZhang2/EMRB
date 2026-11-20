@@ -166,3 +166,16 @@ def test_l3_ground_truth_uses_native_json_types():
             boolean_paths += 1
 
     assert boolean_paths == 260
+
+
+def test_l2_99pct_bandwidth_is_the_generated_raised_cosine_width():
+    from generation.signal_library import raised_cosine_occupied_bw_hz
+    for _, meta in _metadata(2):
+        fs = meta['generation_params']['fs']
+        gt = next(q for q in meta['questions'] if q['id'] == 'Q2')['ground_truth']
+        rs = gt['symbol_rate_kHz'] * 1e3
+        expected = round(raised_cosine_occupied_bw_hz(rs, gt['rolloff'], fs) / 1e3, 1)
+        assert gt['bw_99_kHz'] == expected, meta['sample_id']
+        # the full raised-cosine PSD holds 99% of its energy near Rs, well
+        # inside the Rs(1+alpha) support
+        assert 1.0 * rs < gt['bw_99_kHz'] * 1e3 < 1.1 * rs, meta['sample_id']

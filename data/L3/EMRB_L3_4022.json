@@ -38,7 +38,7 @@
         "64qam": {
           "pts": 3
         },
-        "scoring": "l3-deterministic-v5"
+        "scoring": "l3-deterministic-v6"
       }
     },
     {
@@ -48,8 +48,8 @@
         "noise_in_band_dBm": -67.0,
         "SNR_dB": 35.1,
         "EbN0_dB": 28.3,
-        "EbN0_required_dB": 16.5,
-        "margin_dB": 11.8,
+        "EbN0_required_dB": 17.8,
+        "margin_dB": 10.5,
         "feasible": true
       },
       "rubric": {
@@ -68,7 +68,7 @@
           "pts": 5,
           "tol": "±3dB"
         },
-        "scoring": "l3-deterministic-v5"
+        "scoring": "l3-deterministic-v6"
       }
     },
     {
@@ -137,7 +137,7 @@
           "pts": 5,
           "note": "larger IBO means lower PA efficiency"
         },
-        "scoring": "l3-deterministic-v5"
+        "scoring": "l3-deterministic-v6"
       }
     },
     {
@@ -170,7 +170,7 @@
         "ENOB": {
           "pts": 6
         },
-        "scoring": "l3-deterministic-v5"
+        "scoring": "l3-deterministic-v6"
       }
     },
     {
@@ -199,7 +199,7 @@
         "reduction": {
           "pts": 5
         },
-        "scoring": "l3-deterministic-v5"
+        "scoring": "l3-deterministic-v6"
       }
     }
   ],

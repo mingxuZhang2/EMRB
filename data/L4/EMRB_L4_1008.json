@@ -18,7 +18,7 @@
       },
       "rubric": {
         "points": 20,
-        "scoring": "l4-generic-v3",
+        "scoring": "l4-generic-v4",
         "symbol_rate": {
           "pts": 10,
           "tolerance": "±15%",
@@ -51,7 +51,7 @@
       },
       "rubric": {
         "points": 20,
-        "scoring": "l4-generic-v3",
+        "scoring": "l4-generic-v4",
         "deviation": {
           "pts": 6,
           "tolerance": "±20%"
@@ -85,7 +85,7 @@
       },
       "rubric": {
         "points": 20,
-        "scoring": "l4-generic-v3",
+        "scoring": "l4-generic-v4",
         "modulation": {
           "pts": 5,
           "scoring": {
@@ -161,7 +161,7 @@
       },
       "rubric": {
         "points": 20,
-        "scoring": "l4-generic-v3",
+        "scoring": "l4-generic-v4",
         "mod_depth": {
           "pts": 5,
           "tolerance": "±15%"

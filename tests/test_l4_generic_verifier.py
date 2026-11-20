@@ -330,3 +330,31 @@ def test_qt04_negated_derivation_earns_no_credit():
                 meta['sample_id']
             return
     raise AssertionError('no QT04 sample found')
+
+
+def test_qt10_gap_in_prompt_unit_bits_per_symbol_scores():
+    # the QT10 prompt calls bits/symbol the "spectral efficiency"; a gap in
+    # that unit must not be dropped as a 'bits' count
+    for meta in _all_metadata():
+        for question in _generic_questions(meta):
+            if question['question_type'] != 'QT10':
+                continue
+            signals = meta['generation_params']['signals']
+            reference = _reference_response(meta)
+            variant = reference.replace('bps/Hz below the Shannon limit',
+                                        'bits/symbol below the Shannon limit')
+            assert variant != reference
+            result = v.score_l4_generic_question(question, variant, signals)
+            gap = next(c for c in result['sub_scores']
+                       if c['id'] == 'gap_analysis')
+            assert gap['score'] == gap['max'], meta['sample_id']
+            return
+    raise AssertionError('no QT10 sample found')
+
+
+def test_qt10_shannon_limit_in_bits_per_symbol_is_not_taken_as_gap():
+    text = ('QPSK achieves 2 bits/symbol; Shannon limit is 6.0 bits/symbol; '
+            'gap of 4.0 bits/symbol')
+    assert v._qt10_gap_text(text) == (
+        'QPSK achieves 2 bits/symbol; Shannon limit is 6.0 bits/symbol; '
+        'gap of 4.0 bps/Hz')

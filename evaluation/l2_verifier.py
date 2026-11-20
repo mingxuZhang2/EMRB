@@ -16,7 +16,7 @@ import re
 
 from evaluation.l4_verifier import _answer_json, _criterion, _number
 
-SCORER_VERSION = 'l2-deterministic-v4'
+SCORER_VERSION = 'l2-deterministic-v5'
 ANSWER_SCHEMA = 'emrb-l2-autocorr-v1'
 
 _BOOL_TOKENS = {'true': True, 'yes': True, 'false': False, 'no': False}

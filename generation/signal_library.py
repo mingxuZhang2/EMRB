@@ -15,6 +15,29 @@ def raised_cosine_filter(n_taps, sps, rolloff=0.35):
     return h / np.sum(h)
 
 
+def raised_cosine_occupied_bw_hz(sym_rate, rolloff, fs, fraction=0.99):
+    """Two-sided bandwidth holding ``fraction`` of the energy of a PSK/QAM
+    signal shaped by ``generate_psk``/``generate_qam``.
+
+    Those generators filter the symbol impulses with a full raised-cosine FIR
+    (not a root raised cosine), so the transmitted PSD is |H_RC(f)|^2 of the
+    exact taps below. Its 99% width is about 1.03-1.05 x Rs for alpha in
+    [0.25, 0.35], well inside the Rs(1+alpha) support. Random symbols have a
+    white spectrum, so this expected-PSD width is the realization-independent
+    ground truth.
+    """
+    sps = int(fs / sym_rate)
+    taps = raised_cosine_filter(8 * sps + 1, sps, rolloff)
+    n_fft = 1 << 20
+    psd = np.abs(np.fft.fftshift(np.fft.fft(taps, n_fft))) ** 2
+    freqs = np.fft.fftshift(np.fft.fftfreq(n_fft, 1 / fs))
+    cumulative = np.cumsum(psd) / np.sum(psd)
+    tail = (1 - fraction) / 2
+    lo = freqs[np.searchsorted(cumulative, tail)]
+    hi = freqs[np.searchsorted(cumulative, 1 - tail)]
+    return float(hi - lo)
+
+
 def _set_power(sig, power_dbm):
     p = 10 ** (power_dbm / 10) / 1000
     current = np.mean(np.abs(sig) ** 2)

@@ -51,7 +51,7 @@ with zero overlap across levels.
 | **L4** | Multi-Signal Analysis | 5 | Symbol rate, FM, chirp/radar, burst, link budget, OFDM, interference, AM, Shannon |
 | **L5** | System Design | 3 | Spectrum survey, radar coexistence, OFDM system design |
 
-Across 14 evaluated LLMs, overall scores range from 24.1% to 78.9% with no ceiling effect. The
+Across 14 evaluated LLMs, overall scores range from 24.1% to 79.3% with no ceiling effect. The
 cross-model mean falls from 84.9% on L1 to 21.2% on L5.
 
 ## Layout

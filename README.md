@@ -28,7 +28,7 @@ Unlike benchmarks built on preprocessed features or structured tables, **EMRB** 
 
 ## Leaderboard
 
-Scores range from **24.1%** (Llama 3.3 70B) to **78.9%** (GPT-5.5) across 14 LLMs, with no ceiling effect.
+Scores range from **24.1%** (Llama 3.3 70B) to **79.3%** (GPT-5.5) across 14 LLMs, with no ceiling effect.
 
 <div align="center">
 <img src="assets/fig_main_results.png" width="95%"/>
@@ -78,7 +78,7 @@ EMRB includes **ReconPilot**, a structured 3-stage pipeline that separates signa
 | **Stage 2: Analysis** | Standard free-form agent loop. The model receives the reconnaissance summary as context and solves all sub-questions. | up to 12 |
 | **Stage 3: Verification** | Deterministic self-consistency checks (e.g., bitrate vs. modulation order, missing sub-questions). Guides one repair pass if inconsistencies are found. | up to 3 |
 
-Across three backbones, ReconPilot raises the overall score by **3.8 to 17.6 points** and improves 13 of 15 backbone-level combinations.
+Across three backbones, ReconPilot raises the overall score by **3.6 to 17.4 points** and improves 13 of 15 backbone-level combinations.
 
 To run with ReconPilot:
 

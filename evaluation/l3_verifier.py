@@ -25,7 +25,7 @@ from evaluation.l1_verifier import (
     part_text,
 )
 
-SCORER_VERSION = 'l3-deterministic-v5'
+SCORER_VERSION = 'l3-deterministic-v6'
 
 
 def score_scalar(*args, **kwargs):
