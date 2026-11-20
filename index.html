@@ -59,8 +59,8 @@
     <div class="block-inner">
       <h2 class="block-title">大语言模型电磁信号分析能力榜单</h2>
       <p class="intro">
-        14 个模型的总体得分从 24.1 分到 78.9 分，跨度 54.8 分，没有任何模型达到 80 分，基准对当前最强系统而言仍未饱和。
-        跨模型平均分从 L1 的 84.9% 依次下降到 L2 的 72.3%、L3 的 68.7%、L4 的 53.1%、L5 的 21.2%。
+        14 个模型的总体得分从 24.1 分到 79.3 分，跨度 55.2 分，没有任何模型达到 80 分，基准对当前最强系统而言仍未饱和。
+        跨模型平均分从 L1 的 84.9% 依次下降到 L2 的 71.8%、L3 的 68.9%、L4 的 54.3%、L5 的 21.2%。
         表格默认按总体得分降序排列，点击任意表头可按该列重新排序，单元格颜色按得分率深浅编码。
       </p>
 
@@ -91,7 +91,7 @@
         <img src="assets/fig_main_results.png" alt="14 个模型的 EMRB 总体得分条形图，以及准确率对每题代码调用次数的效率散点图">
         <figcaption>
           （a）14 个模型的 EMRB 总体得分。（b）效率前沿：准确率对每题平均代码调用次数。
-          更高的成绩并非来自执行更多代码：GPT-5.5 以每题 3.7 次代码调用达到 78.9%，Grok-4.5 以每题 12.6 次调用达到接近的 77.8%，
+          更高的成绩并非来自执行更多代码：GPT-5.5 以每题 3.7 次代码调用达到 79.3%，Grok-4.5 以每题 12.6 次调用达到接近的 78.7%，
           交互次数是前者的三倍以上，准确率却几乎相同。
         </figcaption>
       </figure>
@@ -135,7 +135,7 @@
       <p class="intro">
         ReconPilot 用两个固定阶段包裹住由大模型主导的定向分析：阶段一执行固定的信号侦察，输出一份未定解的频谱区域图而非信号清单；
         阶段二是不加修改的自由代码执行回路；阶段三执行自我校验，在提交之前捕捉不一致。
-        在三个骨干模型上，ReconPilot 分别把总体得分提高 14.0 分、17.6 分与 3.8 分，并在 15 个「骨干 × 层次」组合中改善了 13 个。
+        在三个骨干模型上，ReconPilot 分别把总体得分提高 14.2 分、17.4 分与 3.6 分，并在 15 个「骨干 × 层次」组合中改善了 13 个。
       </p>
       <figure class="fig">
         <img src="assets/fig_reconpilot.png" alt="ReconPilot 三阶段流程图">
@@ -146,12 +146,12 @@
           <tr><th>骨干模型</th><th>方法</th><th>L1</th><th>L2</th><th>L3</th><th>L4</th><th>L5</th><th>总体得分</th></tr>
         </thead>
         <tbody>
-          <tr><th rowspan="2">DeepSeek V4 Flash</th><td>自由代码执行</td><td class="num">91.2</td><td class="num">65.1</td><td class="num">67.5</td><td class="num">41.8</td><td class="num">16.5</td><td class="num">56.4</td></tr>
-          <tr><td>ReconPilot</td><td class="num">88.2</td><td class="num">86.3</td><td class="num">84.9</td><td class="num">67.8</td><td class="num">24.8</td><td class="num hl">70.4</td></tr>
-          <tr><th rowspan="2">Gemini 3.5 Flash</th><td>自由代码执行</td><td class="num">91.9</td><td class="num">46.3</td><td class="num">72.6</td><td class="num">47.2</td><td class="num">28.3</td><td class="num">57.2</td></tr>
-          <tr><td>ReconPilot</td><td class="num">94.9</td><td class="num">89.2</td><td class="num">84.3</td><td class="num">72.2</td><td class="num">33.1</td><td class="num hl">74.8</td></tr>
-          <tr><th rowspan="2">GPT-5.5</th><td>自由代码执行</td><td class="num">95.8</td><td class="num">86.0</td><td class="num">93.2</td><td class="num">84.8</td><td class="num">34.5</td><td class="num">78.9</td></tr>
-          <tr><td>ReconPilot</td><td class="num">97.0</td><td class="num">87.7</td><td class="num">90.1</td><td class="num">90.5</td><td class="num">48.2</td><td class="num hl">82.7</td></tr>
+          <tr><th rowspan="2">DeepSeek V4 Flash</th><td>自由代码执行</td><td class="num">91.2</td><td class="num">62.4</td><td class="num">67.5</td><td class="num">41.9</td><td class="num">16.5</td><td class="num">55.9</td></tr>
+          <tr><td>ReconPilot</td><td class="num">88.2</td><td class="num">84.7</td><td class="num">85.2</td><td class="num">67.8</td><td class="num">24.8</td><td class="num hl">70.1</td></tr>
+          <tr><th rowspan="2">Gemini 3.5 Flash</th><td>自由代码执行</td><td class="num">91.9</td><td class="num">46.3</td><td class="num">72.5</td><td class="num">47.3</td><td class="num">28.3</td><td class="num">57.3</td></tr>
+          <tr><td>ReconPilot</td><td class="num">94.9</td><td class="num">88.4</td><td class="num">84.5</td><td class="num">72.4</td><td class="num">33.1</td><td class="num hl">74.7</td></tr>
+          <tr><th rowspan="2">GPT-5.5</th><td>自由代码执行</td><td class="num">95.8</td><td class="num">86.8</td><td class="num">93.5</td><td class="num">85.9</td><td class="num">34.5</td><td class="num">79.3</td></tr>
+          <tr><td>ReconPilot</td><td class="num">97.0</td><td class="num">88.1</td><td class="num">90.4</td><td class="num">90.8</td><td class="num">48.2</td><td class="num hl">82.9</td></tr>
         </tbody>
       </table>
     </div>
@@ -296,7 +296,7 @@
     (c) Estimate its null-to-null bandwidth (Hz).
     (d) Why do these three bandwidth definitions yield different values? For frequency planning,
         which definition is most appropriate? Why?</p>
-          <div class="qa-a"><b>答案：</b>3 dB 带宽 250 kHz，99% 功率带宽 325 kHz，零点间带宽 325 kHz；频率规划应采用 99% 功率带宽</div>
+          <div class="qa-a"><b>答案：</b>3 dB 带宽 250 kHz，99% 功率带宽 259.6 kHz，零点间带宽 325 kHz；频率规划应采用 99% 功率带宽</div>
         </div>
       </div>
 
@@ -377,9 +377,9 @@ used for radar ranging, what is the corresponding range resolution in meters?</p
         <thead><tr><th>等级</th><th>标准答案回放</th><th>14 模型并集</th><th>最佳单模型</th><th>程序化参考解</th></tr></thead>
         <tbody>
           <tr><th>L1</th><td class="num">100.0</td><td class="num">99.8</td><td class="num">95.8</td><td class="num">不适用</td></tr>
-          <tr><th>L2</th><td class="num">100.0</td><td class="num">99.4</td><td class="num">88.7</td><td class="num">不适用</td></tr>
-          <tr><th>L3</th><td class="num">100.0</td><td class="num">99.6</td><td class="num">93.2</td><td class="num">不适用</td></tr>
-          <tr><th>L4</th><td class="num">100.0</td><td class="num">98.8</td><td class="num">84.8</td><td class="num">不适用</td></tr>
+          <tr><th>L2</th><td class="num">100.0</td><td class="num">99.4</td><td class="num">89.3</td><td class="num">不适用</td></tr>
+          <tr><th>L3</th><td class="num">100.0</td><td class="num">99.6</td><td class="num">93.5</td><td class="num">不适用</td></tr>
+          <tr><th>L4</th><td class="num">100.0</td><td class="num">98.8</td><td class="num">85.9</td><td class="num">不适用</td></tr>
           <tr><th>L5</th><td class="num">100.0</td><td class="num">53.2</td><td class="num">39.8</td><td class="num hl">75.7</td></tr>
         </tbody>
       </table>
