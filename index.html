@@ -336,39 +336,6 @@ used for radar ranging, what is the corresponding range resolution in meters?</p
     </div>
   </div>
 
-  <div class="block block--tint">
-    <div class="block-inner">
-      <h2 class="block-title">确定性评分与分数上限的有效性</h2>
-      <p class="intro">
-        建立在真实物理测量之上的基准，其评分必须同时具备精确性与可复现性。EMRB 通过分级的确定性验证器实现这一点，报告分数中没有任何大模型裁判参与。
-      </p>
-      <ol class="points">
-        <li><b>实体绑定</b>：验证器把抽取出的每一个数值先与其子问题标签、物理单位、信号身份完成匹配，然后才施加针对该物理量的容差，因此回答中其他位置出现的无关数字不可能得分。</li>
-        <li><b>功能性验收</b>：L4 与 L5 的综合答案，例如频谱提取通带、信道排布方案、OFDM 设计参数，按照显式的物理与设计约束验收，而不是与某一个参考字符串比对，从而在保持客观性的同时容纳多种有效设计。</li>
-        <li><b>前置条件门控</b>：L5 的下游子部分只有在其上游前置条件满足时才得分，例如重叠分析以正确的信号对识别为前提。把一个自信的设计施加于错误的对象，比不作答更糟。</li>
-        <li><b>版本与溯源指纹</b>：每条结果都随存验证器版本号与任务溯源指纹，只要题目、波形或评分规则发生变化，过期分数在生成图表与聚合结果时会被自动拒绝。</li>
-      </ol>
-
-      <h3 class="sub-title">分数上限是可以达到的</h3>
-      <table class="plain">
-        <thead><tr><th>等级</th><th>标准答案回放</th><th>14 模型并集</th><th>最佳单模型</th><th>程序化参考解</th></tr></thead>
-        <tbody>
-          <tr><th>L1</th><td class="num">100.0</td><td class="num">99.8</td><td class="num">95.8</td><td class="num">不适用</td></tr>
-          <tr><th>L2</th><td class="num">100.0</td><td class="num">99.4</td><td class="num">89.3</td><td class="num">不适用</td></tr>
-          <tr><th>L3</th><td class="num">100.0</td><td class="num">99.6</td><td class="num">93.5</td><td class="num">不适用</td></tr>
-          <tr><th>L4</th><td class="num">100.0</td><td class="num">98.8</td><td class="num">85.9</td><td class="num">不适用</td></tr>
-          <tr><th>L5</th><td class="num">100.0</td><td class="num">53.2</td><td class="num">39.8</td><td class="num hl">75.7</td></tr>
-        </tbody>
-      </table>
-      <p class="intro" style="margin-top:18px">
-        把每道题的参考值按模型被要求的答案格式渲染出来，再用同一套验证器打分，五个等级均得 100.0 分，说明评分规则处处可满足。
-        对每条判分标准保留 14 个模型中的最好结果，L1 至 L4 的并集覆盖 98.8% 至 99.8% 的可得分数。
-        L5 另有一份约 1000 行的经典 DSP 参考程序，只读取发布的波形与题面文字，不接触生成参数，得 75.7 分，接近最佳模型 39.8 分的两倍。
-        需要说明的是，该参考解是程序化的可达性基线，EMRB 目前没有人类专家基线。
-      </p>
-    </div>
-  </div>
-
 </section>
 
 </main>
