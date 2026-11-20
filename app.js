@@ -89,27 +89,12 @@
 
   /* ---------- 榜单 ---------- */
 
-  var state = { mode: 'level', sortKey: 'avg', sortDir: 'desc' };
-
-  /* 支持 ?mode=type 直接进入完整榜 */
-  if (/[?&]mode=type/.test(window.location ? window.location.search : '')) {
-    state.mode = 'type';
-  }
+  var state = { sortKey: 'avg', sortDir: 'desc' };
 
   function columns() {
-    if (state.mode === 'level') {
-      return D.levels.map(function (l, i) {
-        return { key: 'lv' + i, group: l.key, label: l.key, full: l.key + '　' + l.title, get: function (m) { return m.levels[i]; } };
-      });
-    }
-    var cols = [], n = 0;
-    D.groups.forEach(function (g) {
-      g.types.forEach(function (t) {
-        var idx = n++;
-        cols.push({ key: 't' + idx, group: g.key, label: t, full: g.key + '　' + t, get: function (m) { return m.types[idx]; } });
-      });
+    return D.levels.map(function (l, i) {
+      return { key: 'lv' + i, group: l.key, label: l.key, full: l.key + '　' + l.title, get: function (m) { return m.levels[i]; } };
     });
-    return cols;
   }
 
   function sortedModels(cols) {
@@ -138,8 +123,7 @@
     var host = document.getElementById('lb');
     host.textContent = '';
 
-    var byType = state.mode === 'type';
-    var table = el('table', 'lb ' + (byType ? 'lb--type' : 'lb--level'));
+    var table = el('table', 'lb lb--level');
     var thead = el('thead');
 
     /* 固定列表头：序号、模型、源类型 */
@@ -151,53 +135,19 @@
       [thRank, thName, thSrc].forEach(function (th) { row.appendChild(th); });
     }
 
-    function avgHead(row) {
-      var th = el('th', 'sortable', '总体得分');
-      th.dataset.k = 'avg';
+    var row = el('tr', 'hdr');
+    fixedHeads(row);
+    cols.forEach(function (c, i) {
+      var th = el('th', 'sortable');
+      th.dataset.k = c.key;
+      th.title = D.levels[i].title;
+      th.textContent = c.label;
       row.appendChild(th);
-    }
-
-    if (byType) {
-      /* 上级表头：五个能力层次分组，固定列与总体得分列在此行留空 */
-      var grp = el('tr', 'grp');
-      ['fixed-head stick1', 'fixed-head stick2', 'fixed-head'].forEach(function (cls) {
-        grp.appendChild(el('th', cls, ''));
-      });
-      D.groups.forEach(function (g, gi) {
-        var th = el('th', 'grp-cell', g.key + '　' + g.types.length + ' 类');
-        th.colSpan = g.types.length;
-        th.title = D.levels[gi].title;
-        grp.appendChild(th);
-      });
-      grp.appendChild(el('th', 'fixed-head', ''));
-      thead.appendChild(grp);
-
-      /* 下级表头：27 个题型，竖排 */
-      var hdr = el('tr', 'hdr');
-      fixedHeads(hdr);
-      cols.forEach(function (c) {
-        var th = el('th', 'sortable rot');
-        th.dataset.k = c.key;
-        th.title = c.full;
-        th.appendChild(el('span', null, c.label));
-        hdr.appendChild(th);
-      });
-      avgHead(hdr);
-      thead.appendChild(hdr);
-    } else {
-      /* 精简榜只有一行表头 */
-      var row = el('tr', 'hdr');
-      fixedHeads(row);
-      cols.forEach(function (c, i) {
-        var th = el('th', 'sortable');
-        th.dataset.k = c.key;
-        th.title = D.levels[i].title;
-        th.textContent = c.label;
-        row.appendChild(th);
-      });
-      avgHead(row);
-      thead.appendChild(row);
-    }
+    });
+    var thAvg = el('th', 'sortable', '总体得分');
+    thAvg.dataset.k = 'avg';
+    row.appendChild(thAvg);
+    thead.appendChild(row);
     table.appendChild(thead);
 
     /* 排序标记与点击 */
@@ -230,7 +180,7 @@
 
       cols.forEach(function (c) {
         var v = c.get(m);
-        var td = el('td', 'cell', fmt(v, state.mode === 'level' ? 1 : 1));
+        var td = el('td', 'cell', fmt(v, 1));
         var s = scale(v);
         td.style.background = s.bg;
         td.style.color = s.fg;
@@ -254,7 +204,7 @@
     mr.appendChild(el('td', 'c-rank stick1', ''));
     mr.appendChild(el('td', 'c-model stick2', '跨模型均值'));
     mr.appendChild(el('td', 'c-src', ''));
-    var means = state.mode === 'level' ? D.levelMeans : D.typeMeans;
+    var means = D.levelMeans;
     means.forEach(function (v) { mr.appendChild(el('td', 'cell', v.toFixed(1))); });
     var all = D.models.reduce(function (a, m) { return a + m.avg; }, 0) / D.models.length;
     mr.appendChild(el('td', 'cell avg', all.toFixed(1)));
@@ -265,18 +215,6 @@
   }
 
   function initLeaderboard() {
-    document.querySelectorAll('#lb-mode button').forEach(function (b) {
-      b.setAttribute('aria-pressed', b.dataset.mode === state.mode ? 'true' : 'false');
-      b.addEventListener('click', function () {
-        document.querySelectorAll('#lb-mode button').forEach(function (o) {
-          o.setAttribute('aria-pressed', o === b ? 'true' : 'false');
-        });
-        state.mode = b.dataset.mode;
-        state.sortKey = 'avg';
-        state.sortDir = 'desc';
-        render();
-      });
-    });
     render();
   }
 
@@ -285,13 +223,15 @@
   function initStats() {
     var host = document.getElementById('stats');
     if (!host) return;
+    var avgs = D.models.map(function (m) { return m.avg; });
+    var range = Math.min.apply(null, avgs).toFixed(1) + '–' + Math.max.apply(null, avgs).toFixed(1);
     [
       ['200', '道题目', ''],
       ['5', '个难度等级', ''],
       ['27', '类题型', ''],
       ['11', '种信号类型', ''],
       ['920', '个子问题', ''],
-      ['24.1–78.9', '总分区间', '%']
+      [range, '总分区间', '%']
     ].forEach(function (s) {
       var c = el('div', 'stat');
       var v = el('div', 'v', s[0]);

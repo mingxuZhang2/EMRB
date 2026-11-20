@@ -65,10 +65,6 @@
       </p>
 
       <div class="table-tools">
-        <div class="seg" id="lb-mode">
-          <button data-mode="level" aria-pressed="true">精简榜　5 个能力层次</button>
-          <button data-mode="type" aria-pressed="false">完整榜　27 类题型</button>
-        </div>
         <div class="legend">
           <span>得分率 0</span><span class="bar" aria-hidden="true"></span><span>100</span>
         </div>
@@ -78,8 +74,7 @@
       <noscript><p class="note">榜单表格由页面脚本渲染，请开启 JavaScript。完整数值同时保存在 <code>data.js</code> 中。</p></noscript>
 
       <p class="note" style="margin-top:12px">
-        数值为该层次或该题型的得分率百分比。总体得分由未取整的分级成绩计算，因此可能与各列取整值的均值在末位存在差异。
-        L1、L2、L3、L5 的每道题都实例化本等级的全部题型，故每格平均 40 道题；L4 的每道题抽取 5 类题型，故每格平均 5 至 40 道题。
+        数值为各层次的得分率百分比，每格平均 40 道题。总体得分由未取整的分级成绩计算，因此可能与各列取整值的均值在末位存在差异。
       </p>
     </div>
   </div>
@@ -117,8 +112,8 @@
       </figure>
       <p class="intro">
         按题型看，最弱的三类正是 L5 的三类，跨模型均值分别为 25、23、15 分。
-        L4 中最弱的是香农容量（43 分），而它恰是该等级最标准的教科书公式，说明瓶颈在于从多辐射源场景中提取正确的带宽项与噪声项，而不在计算本身。
-        L1 中唯一的弱项是 dBm 绝对功率（67 分），其余四类在 81 至 96 分之间，这一弱点向上延续到 L2 的能量与功率谱（54 分），
+        L4 中最弱的是干扰与 SIR（45 分），其次是香农容量（47 分）。香农容量恰是该等级最标准的教科书公式，说明瓶颈在于从多辐射源场景中提取正确的带宽项与噪声项，而不在计算本身。
+        L1 中唯一的弱项是功率测量（67 分），其余四类在 81 至 96 分之间，这一弱点向上延续到 L2 的能量与功率谱（54 分），
         可见经过标定的功率测量是最先失效的能力，并且在各个难度等级上持续失效。
       </p>
       <p class="intro">
@@ -199,7 +194,7 @@
     <div class="block-inner">
       <h2 class="block-title">测评基准流程</h2>
       <figure class="fig">
-        <img src="assets/fig_framework.png" alt="EMRB 基准总览图：原始 I/Q 输入、五个难度等级、代码执行评测">
+        <img src="assets/fig_framework_zh.png" alt="EMRB 基准总览图：基准测试输入、难度分级体系、评估流程">
         <figcaption>
           （A）每道题把一段原始 I/Q 采集与一个工程问题配对。（B）从基础测量到系统设计的五个难度等级，覆盖 27 类题型与 11 种信号类型。
           （C）模型迭代地编写并执行 Python 代码，答案由完全确定性的验证器判分。
@@ -210,28 +205,6 @@
         从参数化信号库 → 场景原型与随机种子 → 原始 I/Q 波形与题目 → 沙箱内的多轮代码执行 → 分级确定性验证器 → 五个层次的能力衡量，
         形成一个覆盖面广、逻辑严谨、可完全复现的评测框架。
       </p>
-      <div class="flow">
-        <div class="step">
-          <h4>一、程序化合成可验证的原始信号</h4>
-          <p>参数化信号库覆盖 11 种信号类型。每道题由「场景原型 + 随机种子」唯一确定，每级 8 个原型、5 个种子。载频、带宽、功率与信噪比按等级范围采样，叠加经过功率标定的 AWGN，标准答案直接来自生成参数。</p>
-        </div>
-        <div class="arrow" aria-hidden="true">→</div>
-        <div class="step">
-          <h4>二、多层次多维度的题目生成</h4>
-          <p>5 个难度等级、27 类题型、920 个子问题。L1 至 L4 各含 5 个子问题，每个 20 分；L5 含 3 个综合子问题，分值 34、33、33。同一段信号会因问题不同而需要不同的分析过程。</p>
-        </div>
-        <div class="arrow" aria-hidden="true">→</div>
-        <div class="step">
-          <h4>三、代码执行评测与确定性判分</h4>
-          <p>模型收到题面与原始 I/Q 文件路径，在沙箱化的 Python 工具中最多进行 15 轮交互，提交结构化答案。分级确定性验证器按实体绑定与功能性验收规则判分，全过程不含大模型裁判。</p>
-        </div>
-      </div>
-      <h3 class="sub-title">数据质量校验</h3>
-      <ul class="points">
-        <li><b>独立复现</b>：参考信号处理脚本从保存的文件重新测量全部答案，在 200 道题上与生成参数的一致性优于 1%。</li>
-        <li><b>实现容差</b>：每段波形确实实现了目标参数，功率误差在 ±0.5 dB 以内，信噪比误差在 ±1 dB 以内，带宽误差在 ±5% 以内。</li>
-        <li><b>覆盖度</b>：题型分布与信号类型分布均符合设计。</li>
-      </ul>
     </div>
   </div>
 
@@ -249,9 +222,9 @@
         <tbody>
           <tr><th>L1</th><td>基础测量</td><td>信号检测、功率测量、采样参数、噪声基底、调制识别</td><td class="num">2–3</td><td class="num">5</td></tr>
           <tr><th>L2</th><td>信号处理方法论</td><td>FFT 与窗函数、带宽定义、自相关、STFT、能量与功率谱</td><td class="num">3–4</td><td class="num">5</td></tr>
-          <tr><th>L3</th><td>通信理论</td><td>比特率与符号率、Eb/N0 与误码率、PAPR、ADC 量化、数字下变频</td><td class="num">3–4</td><td class="num">5</td></tr>
+          <tr><th>L3</th><td>通信理论</td><td>比特率与符号率、Eb/N0 与误码率、PAPR 与功放回退、ADC 量化、数字下变频</td><td class="num">3–4</td><td class="num">5</td></tr>
           <tr><th>L4</th><td>多信号分析</td><td>符号率与调制阶数、FM 参数、AM 参数、chirp 与雷达参数、突发分析、频谱空隙链路预算、干扰与 SIR、OFDM 参数、香农容量（每题抽 5 类）</td><td class="num">3–5</td><td class="num">5</td></tr>
-          <tr><th>L5</th><td>系统设计</td><td>频谱普查、雷达与通信共存、OFDM 系统设计</td><td class="num">6–7</td><td class="num">3</td></tr>
+          <tr><th>L5</th><td>系统设计</td><td>频谱态势感知与干扰抑制、雷达通信共存与波形恢复、多链路容量优化与新链路部署</td><td class="num">6–7</td><td class="num">3</td></tr>
         </tbody>
       </table>
 
@@ -267,7 +240,7 @@
           <div class="qa-a"><b>答案：</b>信号数 3；中心频率 −7.41、−5.83、+3.46 MHz；最强 +3.46 MHz，最弱 −5.83 MHz；功率差 3.2 dB</div>
         </div>
         <div class="qa">
-          <div class="qa-type">绝对功率 dBm</div>
+          <div class="qa-type">功率测量</div>
           <p class="qa-q">Power measurement and dB conversion:
     (a) Estimate the power (dBm) of each signal.
     (b) Convert the power of each signal from dBm to mW.
@@ -280,7 +253,7 @@
       <div class="qa-node">
         <h4>L2　测量方法的选择与论证</h4>
         <div class="qa">
-          <div class="qa-type">FFT 与加窗</div>
+          <div class="qa-type">FFT 与窗函数</div>
           <p class="qa-q">Spectral analysis parameters &amp; windowing:
     (a) Given fs = 20 MHz and N = 32768, compute the current FFT frequency resolution Δf = fs/N (Hz).
     (b) Rectangular window vs Hamming window: how does the main lobe width change? How does the sidelobe
@@ -332,7 +305,7 @@ rates (ksym/s) and modulation orders respectively, and explain how you distingui
           <div class="qa-a"><b>答案：</b>信号 1 为 QPSK，中心 +0.67 MHz，350 ksps，M = 4；信号 2 为 8PSK，中心 +1.69 MHz，150 ksps，M = 8</div>
         </div>
         <div class="qa">
-          <div class="qa-type">chirp 与雷达</div>
+          <div class="qa-type">chirp 与雷达参数</div>
           <p class="qa-q">There is a linear frequency modulated (Chirp) signal in the +5 to +8 MHz range. Please calculate:
 (a) time-bandwidth product (TBP), (b) processing gain after matched filtering (dB), (c) if this chirp is
 used for radar ranging, what is the corresponding range resolution in meters?</p>
@@ -343,15 +316,19 @@ used for radar ranging, what is the corresponding range resolution in meters?</p
       <div class="qa-node">
         <h4>L5　频谱态势到系统设计的综合</h4>
         <div class="qa">
-          <div class="qa-type">频谱普查</div>
+          <div class="qa-type">频谱态势感知与干扰抑制</div>
           <p class="qa-q">Question 1: Comprehensive Spectrum Situational Awareness and Interference Mitigation (34 pts)
 (a) Identify all independent signal sources in the band (including possible low-power or burst signals),
     and provide for each signal: center frequency (MHz), occupied bandwidth (MHz), modulation type,
     estimated power (dBm). For a burst signal, report its power during the active interval rather than
     its average over the full recording. Do not miss any signals. (12 pts)
 (b) Find the pair of non-chirp signals with the largest occupied-band overlap. Calculate their overlap
-    bandwidth (MHz) and SIR (dB), using the weaker signal as the target. (8 pts)
-(c) Design one contiguous spectral extraction filter ... (14 pts)</p>
+    bandwidth (MHz) and SIR (dB), using the weaker signal as the target. If a burst is involved, use its
+    active-interval power. Reuse the signal IDs assigned in (a). (8 pts)
+(c) Design one contiguous spectral extraction passband for the weaker signal in (b) that maximizes
+    post-filter SIR while retaining at least 80% of its occupied bandwidth ... (8 pts)
+(d) Calculate the union spectral occupancy of the entire +/-10 MHz band ... and assess whether the band
+    can support one additional channel for every source identified in (a) ... (6 pts)</p>
           <div class="qa-a"><b>答案（Q1a 部分）：</b>本题共 6 个辐射源，依次为 QPSK（+1.73 MHz，0.688 MHz，−30.1 dBm）、16QAM（+2.16 MHz，0.625 MHz，−34.5 dBm）、Chirp LFM（+6.11 MHz，3.605 MHz，−27.7 dBm）、BPSK（+5.84 MHz，0.390 MHz，−38.3 dBm）、FM（−7.04 MHz，0.820 MHz，−35.7 dBm）、突发 QPSK（−9.29 MHz，0.375 MHz，活动区间内 −41.3 dBm）</div>
         </div>
       </div>
@@ -431,7 +408,7 @@ used for radar ranging, what is the corresponding range resolution in meters?</p
 }</pre>
     </div>
     <div class="legal">
-      榜单数值取自论文正式结果表与经校验的评测结果加载器，随评测器版本与任务溯源指纹一并核对。
+      榜单数值取自经校验的评测结果加载器，随评测器版本与任务溯源指纹一并核对。
     </div>
   </div>
 </footer>
