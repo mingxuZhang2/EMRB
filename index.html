@@ -124,34 +124,6 @@
     </div>
   </div>
 
-  <div class="block block--tint">
-    <div class="block-inner">
-      <h2 class="block-title">结构化分析方法 ReconPilot</h2>
-      <p class="intro">
-        ReconPilot 用两个固定阶段包裹住由大模型主导的定向分析：阶段一执行固定的信号侦察，输出一份未定解的频谱区域图而非信号清单；
-        阶段二是不加修改的自由代码执行回路；阶段三执行自我校验，在提交之前捕捉不一致。
-        在三个骨干模型上，ReconPilot 分别把总体得分提高 14.2 分、17.4 分与 3.6 分，并在 15 个「骨干 × 层次」组合中改善了 13 个。
-      </p>
-      <figure class="fig">
-        <img src="assets/fig_reconpilot.png" alt="ReconPilot 三阶段流程图">
-        <figcaption>ReconPilot 流程：固定侦察产生未定解的频谱区域图，引导自由分析回路，最后由确定性自我校验收尾。</figcaption>
-      </figure>
-      <table class="plain">
-        <thead>
-          <tr><th>骨干模型</th><th>方法</th><th>L1</th><th>L2</th><th>L3</th><th>L4</th><th>L5</th><th>总体得分</th></tr>
-        </thead>
-        <tbody>
-          <tr><th rowspan="2">DeepSeek V4 Flash</th><td>自由代码执行</td><td class="num">91.2</td><td class="num">62.4</td><td class="num">67.5</td><td class="num">41.9</td><td class="num">16.5</td><td class="num">55.9</td></tr>
-          <tr><td>ReconPilot</td><td class="num">88.2</td><td class="num">84.7</td><td class="num">85.2</td><td class="num">67.8</td><td class="num">24.8</td><td class="num hl">70.1</td></tr>
-          <tr><th rowspan="2">Gemini 3.5 Flash</th><td>自由代码执行</td><td class="num">91.9</td><td class="num">46.3</td><td class="num">72.5</td><td class="num">47.3</td><td class="num">28.3</td><td class="num">57.3</td></tr>
-          <tr><td>ReconPilot</td><td class="num">94.9</td><td class="num">88.4</td><td class="num">84.5</td><td class="num">72.4</td><td class="num">33.1</td><td class="num hl">74.7</td></tr>
-          <tr><th rowspan="2">GPT-5.5</th><td>自由代码执行</td><td class="num">95.8</td><td class="num">86.8</td><td class="num">93.5</td><td class="num">85.9</td><td class="num">34.5</td><td class="num">79.3</td></tr>
-          <tr><td>ReconPilot</td><td class="num">97.0</td><td class="num">88.1</td><td class="num">90.4</td><td class="num">90.8</td><td class="num">48.2</td><td class="num hl">82.9</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
 </section>
 
 <!-- ============================ 评估架构 ============================ -->
