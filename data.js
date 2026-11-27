@@ -11,7 +11,7 @@ window.EMRB = {
   {
    "key": "L2",
    "title": "测量方法的选择与论证",
-   "theme": "信号处理方法论",
+   "theme": "信号处理",
    "emitters": "3–4",
    "subq": 5
   },
