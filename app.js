@@ -93,7 +93,7 @@
 
   function columns() {
     return D.levels.map(function (l, i) {
-      return { key: 'lv' + i, group: l.key, label: l.key, full: l.key + '　' + l.title, get: function (m) { return m.levels[i]; } };
+      return { key: 'lv' + i, group: l.key, label: l.key, full: l.key + '　' + l.theme, get: function (m) { return m.levels[i]; } };
     });
   }
 
@@ -140,7 +140,7 @@
     cols.forEach(function (c, i) {
       var th = el('th', 'sortable');
       th.dataset.k = c.key;
-      th.title = D.levels[i].title;
+      th.title = D.levels[i].theme;
       th.textContent = c.label;
       row.appendChild(th);
     });

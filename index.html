@@ -139,23 +139,23 @@
       </p>
       <div class="cap-grid">
         <div class="cap">
-          <div class="cap-head"><span class="cap-lv">L1</span><div class="cap-name">基础测量的<br>标定精度</div></div>
+          <div class="cap-head"><span class="cap-lv">L1</span><div class="cap-name">基础测量</div></div>
           <div class="cap-body">评估模型在已知频段粗略图景的前提下，读取每个源的中心频率、功率、噪声基底与调制类型的数值可靠性，检验其能否把一份粗略先验转化为经过标定的测量结果。</div>
         </div>
         <div class="cap">
-          <div class="cap-head"><span class="cap-lv">L2</span><div class="cap-name">测量方法的<br>选择与论证</div></div>
+          <div class="cap-head"><span class="cap-lv">L2</span><div class="cap-name">信号处理<br>方法论</div></div>
           <div class="cap-body">测试模型能否为具体问题选定正确的信号处理过程，而不只是执行某一个过程。仅带宽一词就可能指 3 dB 宽度、零点间宽度或占用功率宽度，三者需要三种不同的实现。</div>
         </div>
         <div class="cap">
-          <div class="cap-head"><span class="cap-lv">L3</span><div class="cap-name">测量到<br>系统量的解释</div></div>
+          <div class="cap-head"><span class="cap-lv">L3</span><div class="cap-name">通信理论</div></div>
           <div class="cap-body">评估模型能否把测得的信号属性连接到比特率、Eb/N0、PAPR、ADC 量化与数字下变频等通信系统量，考察其是否在依赖关系链上保持自洽，而非孤立套用公式。</div>
         </div>
         <div class="cap">
-          <div class="cap-head"><span class="cap-lv">L4</span><div class="cap-name">多信号场景的<br>实体绑定</div></div>
+          <div class="cap-head"><span class="cap-lv">L4</span><div class="cap-name">多信号分析</div></div>
           <div class="cap-body">在含有 3 至 5 个辐射源的拥挤频谱中，评估模型能否先建立完整的信号清单，再把每一项测量持续绑定到正确的辐射源。一旦遗漏或合并了某个辐射源，误差会传播到下游的每一项测量。</div>
         </div>
         <div class="cap">
-          <div class="cap-head"><span class="cap-lv">L5</span><div class="cap-name">频谱态势到<br>系统设计的综合</div></div>
+          <div class="cap-head"><span class="cap-lv">L5</span><div class="cap-name">系统设计</div></div>
           <div class="cap-body">分析模型能否贯穿频谱普查、波形恢复、共存分析与系统设计这一整条链路，揭示其是否具备在约束条件下作出可行工程决策、并对自己的设计作可行性自检的能力。</div>
         </div>
       </div>
@@ -201,7 +201,7 @@
       </table>
 
       <div class="qa-node">
-        <h4>L1　基础测量的标定精度</h4>
+        <h4>L1　基础测量</h4>
         <div class="qa">
           <div class="qa-type">信号检测</div>
           <p class="qa-q">Observe the spectrum of this frequency band and answer the following questions:
@@ -223,7 +223,7 @@
       </div>
 
       <div class="qa-node">
-        <h4>L2　测量方法的选择与论证</h4>
+        <h4>L2　信号处理方法论</h4>
         <div class="qa">
           <div class="qa-type">FFT 与窗函数</div>
           <p class="qa-q">Spectral analysis parameters &amp; windowing:
@@ -246,7 +246,7 @@
       </div>
 
       <div class="qa-node">
-        <h4>L3　测量到系统量的解释</h4>
+        <h4>L3　通信理论</h4>
         <div class="qa">
           <div class="qa-type">比特率与符号率</div>
           <p class="qa-q">For the digitally modulated signal at +1.3 MHz:
@@ -269,7 +269,7 @@
       </div>
 
       <div class="qa-node">
-        <h4>L4　多信号场景的实体绑定</h4>
+        <h4>L4　多信号分析</h4>
         <div class="qa">
           <div class="qa-type">符号率与调制阶数</div>
           <p class="qa-q">There are two digitally modulated signals in the −0.3 to +2.7 MHz region. Please estimate their symbol
@@ -286,7 +286,7 @@ used for radar ranging, what is the corresponding range resolution in meters?</p
       </div>
 
       <div class="qa-node">
-        <h4>L5　频谱态势到系统设计的综合</h4>
+        <h4>L5　系统设计</h4>
         <div class="qa">
           <div class="qa-type">频谱态势感知与干扰抑制</div>
           <p class="qa-q">Question 1: Comprehensive Spectrum Situational Awareness and Interference Mitigation (34 pts)
